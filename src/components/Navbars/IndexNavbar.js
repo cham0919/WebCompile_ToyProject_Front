@@ -209,13 +209,17 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-spaceship" /> proxy test
               </Button>
             </NavItem>
+             <NavItem>
+
+                       <i/> SignIn
+                        </NavItem>
             <NavItem>
               <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
                 onClick={scrollToDownload}
               >
-                <i className="tim-icons icon-cloud-download-93" /> Download
+                <i className="tim-icons icon-cloud-download-93" /> SignUp
               </Button>
             </NavItem>
           </Nav>
