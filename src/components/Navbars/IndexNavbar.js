@@ -75,8 +75,21 @@ export default function IndexNavbar() {
       .getElementById("download-section")
       .scrollIntoView({ behavior: "smooth" });
   };
+  const Logout = () => {
+    Axios.get("/wcp/logout")
+        .then(function (response) {
+          // response
+          console.log(response)
+        }).catch(function (error) {
+      // 오류발생시 실행
+    }).then(function() {
+      // 항상 실행
+    });
+  }
+
+
   const proxyBoardInsertTest = () => {
- Axios.get("/mainboard/insert")
+ Axios.get("/wcp/user/check")
      .then(function (response) {
           // response
           console.log(response)
@@ -209,17 +222,17 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-spaceship" /> proxy test
               </Button>
             </NavItem>
-             <NavItem>
-
-                       <i/> SignIn
-                        </NavItem>
+             <button
+              onClick={Logout}>
+               <i> Logout</i>
+                        </button>
             <NavItem>
               <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
-                onClick={scrollToDownload}
+                tag={Link} to="/register-page"
               >
-                <i className="tim-icons icon-cloud-download-93" /> SignUp
+                <i className="tim-icons icon-single-02" /> SignIn
               </Button>
             </NavItem>
           </Nav>
