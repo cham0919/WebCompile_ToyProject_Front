@@ -27,6 +27,8 @@ import Index from "views/Index.js";
 import LandingPage from "views/examples/LandingPage.js";
 import RegisterPage from "views/examples/RegisterPage.js";
 import ProfilePage from "views/examples/ProfilePage.js";
+import Signup from "./views/IndexSections/Signup";
+import SignUpPage from "./views/examples/SignUpPage";
 
 ReactDOM.render(
   <BrowserRouter>
@@ -43,6 +45,10 @@ ReactDOM.render(
       <Route
         path="/profile-page"
         render={(props) => <ProfilePage {...props} />}
+      />
+      <Route
+          path="/signUp-page"
+          render={(props) => <SignUpPage {...props} />}
       />
       <Redirect from="/" to="/components" />
     </Switch>
