@@ -76,7 +76,7 @@ export default function Signup() {
                   alt="..."
                   src={require("assets/img/square-purple-1.png").default}
                 />
-                <CardTitle tag="h4">Register</CardTitle>
+                <CardTitle tag="h4">WelCome WCP</CardTitle>
               </CardHeader>
               <CardBody>
                 <Form className="form">

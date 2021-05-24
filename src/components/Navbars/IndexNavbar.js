@@ -41,12 +41,46 @@ export default function IndexNavbar() {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [collapseOut, setCollapseOut] = React.useState("");
   const [color, setColor] = React.useState("navbar-transparent");
+  const [isLogin, setIsLogin] = React.useState(false);
+  const [userName, setuserName] = React.useState("");
   React.useEffect(() => {
     window.addEventListener("scroll", changeColor);
     return function cleanup() {
       window.removeEventListener("scroll", changeColor);
     };
   },[]);
+
+  //login check
+  Axios.get("/wcp/user/check")
+      .then(function (response) {
+        // response
+        setIsLogin(true)
+        setuserName(response.data)
+      }).catch(function (error) {
+    // 오류발생시 실행
+    setIsLogin(false)
+    setuserName("SignIn")
+  }).then(function() {
+    // 항상 실행
+  });
+
+  const getUrlFromSignInCheck = () => {
+    return isLogin ? "/userHome-page" : "/register-page";
+  }
+
+  function showLogout(){
+    return (
+        <Button
+            className="btn-simple btn-round btn-neutral"
+            onClick={Logout}>
+          <text
+              style="display:none"
+          >Logout</text>
+        </Button>
+    );
+  }
+
+
   const changeColor = () => {
     if (
       document.documentElement.scrollTop > 99 ||
@@ -75,8 +109,22 @@ export default function IndexNavbar() {
       .getElementById("download-section")
       .scrollIntoView({ behavior: "smooth" });
   };
+  const Logout = () => {
+    Axios.get("/wcp/logout")
+        .then(function (response) {
+          // response
+          console.log(response)
+          window.location.href="/components";
+        }).catch(function (error) {
+      // 오류발생시 실행
+    }).then(function() {
+      // 항상 실행
+    });
+  }
+
+
   const proxyBoardInsertTest = () => {
- Axios.get("/mainboard/insert")
+ Axios.get("/wcp/user/check")
      .then(function (response) {
           // response
           console.log(response)
@@ -209,19 +257,35 @@ export default function IndexNavbar() {
                 <i className="tim-icons icon-spaceship" /> proxy test
               </Button>
             </NavItem>
-             <NavItem>
-
-                       <i/> SignIn
-                        </NavItem>
+            <NavItem
+                style={{ display: isLogin ? "block" : "none" }}
+            >
+              <Button
+                  className="btn-simple btn-round btn-neutral"
+                  onClick={Logout}>
+                Logout
+              </Button>
+            </NavItem>
             <NavItem>
               <Button
                 className="nav-link d-none d-lg-block"
                 color="default"
-                onClick={scrollToDownload}
+                tag={Link} to={getUrlFromSignInCheck}
               >
-                <i className="tim-icons icon-cloud-download-93" /> SignUp
+                <i className="tim-icons icon-single-02" /> {userName}
               </Button>
             </NavItem>
+{/*
+            <NavItem>
+              <Button
+                className="nav-link d-none d-lg-block"
+                color="default"
+                tag={Link} to="/register-page"
+              >
+                <i className="tim-icons icon-single-02" /> SignIn
+              </Button>
+            </NavItem>
+*/}
           </Nav>
         </Collapse>
       </Container>

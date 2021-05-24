@@ -41,13 +41,43 @@ import {
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
+import Axios from "axios";
+import {Link} from "react-router-dom";
 
 export default function RegisterPage() {
   const [squares1to6, setSquares1to6] = React.useState("");
   const [squares7and8, setSquares7and8] = React.useState("");
-  const [fullNameFocus, setFullNameFocus] = React.useState(false);
+  const [IDFocus, setIDFocus] = React.useState(false);
   const [emailFocus, setEmailFocus] = React.useState(false);
   const [passwordFocus, setPasswordFocus] = React.useState(false);
+  const [id, setId] = React.useState("");
+  const [pw, setPassword] = React.useState("");
+  const [rememberMe, setRememberMe] = React.useState(false);
+  const [failSignCheck, setFailSignCheck] = React.useState(0);
+
+
+  const signInCheck = () => {
+    const url = '/wcp/signin';
+    let frm = new FormData()
+    frm.append('id', id)
+    frm.append('pw', pw)
+    // frm.append('rememberMe', String.valueOf(rememberMe))
+
+    Axios.post(url, frm)
+        .then(function (response) {
+          // response
+          console.log(response)
+        }).catch(function (error) {
+      // 오류발생시 실행
+      setFailSignCheck(failSignCheck+1);
+      console.log("로그인 실패!" , failSignCheck)
+    }).then(function() {
+      // 항상 실행
+    });
+  }
+
+
+
   React.useEffect(() => {
     document.body.classList.toggle("register-page");
     document.documentElement.addEventListener("mousemove", followCursor);
@@ -101,13 +131,13 @@ export default function RegisterPage() {
                         alt="..."
                         src={require("assets/img/square-purple-1.png").default}
                       />
-                      <CardTitle tag="h4">Register</CardTitle>
+                      <CardTitle tag="h4">Sign In</CardTitle>
                     </CardHeader>
                     <CardBody>
                       <Form className="form">
                         <InputGroup
                           className={classnames({
-                            "input-group-focus": fullNameFocus,
+                            "input-group-focus": IDFocus,
                           })}
                         >
                           <InputGroupAddon addonType="prepend">
@@ -116,13 +146,14 @@ export default function RegisterPage() {
                             </InputGroupText>
                           </InputGroupAddon>
                           <Input
-                            placeholder="Full Name"
+                            placeholder="ID"
                             type="text"
-                            onFocus={(e) => setFullNameFocus(true)}
-                            onBlur={(e) => setFullNameFocus(false)}
+                            onFocus={(e) => setIDFocus(true)}
+                            onBlur={(e) => setIDFocus(false)}
+                            onChange={(e) => setId(e.target.value)}
                           />
                         </InputGroup>
-                        <InputGroup
+                        {/*<InputGroup
                           className={classnames({
                             "input-group-focus": emailFocus,
                           })}
@@ -138,7 +169,7 @@ export default function RegisterPage() {
                             onFocus={(e) => setEmailFocus(true)}
                             onBlur={(e) => setEmailFocus(false)}
                           />
-                        </InputGroup>
+                        </InputGroup>*/}
                         <InputGroup
                           className={classnames({
                             "input-group-focus": passwordFocus,
@@ -151,29 +182,51 @@ export default function RegisterPage() {
                           </InputGroupAddon>
                           <Input
                             placeholder="Password"
-                            type="text"
+                            type="password"
                             onFocus={(e) => setPasswordFocus(true)}
                             onBlur={(e) => setPasswordFocus(false)}
+                            onChange={(e) => setPassword(e.target.value)}
                           />
                         </InputGroup>
                         <FormGroup check className="text-left">
                           <Label check>
-                            <Input type="checkbox" />
-                            <span className="form-check-sign" />I agree to the{" "}
-                            <a
-                              href="#pablo"
-                              onClick={(e) => e.preventDefault()}
-                            >
-                              terms and conditions
-                            </a>
-                            .
+                            <Input type="checkbox"
+                            onChange={(e) => setRememberMe(e.target.checked)}
+                            />
+                            <span className="form-check-sign" /> Remember me
+                            {/*<a*/}
+                            {/*  href="#pablo"*/}
+                            {/*  onClick={(e) => e.preventDefault()}*/}
+                            {/*>*/}
+                            {/*  terms and conditions*/}
+                            {/*</a>*/}
                           </Label>
                         </FormGroup>
+                        <FormGroup check >
+                        <Label check>
+                          <span className="text-warning"
+                          hidden={failSignCheck > 0 ? false : true}>
+                            Fail to SignIn
+                          </span>
+                        </Label>
+                      </FormGroup>
                       </Form>
                     </CardBody>
                     <CardFooter>
-                      <Button className="btn-round" color="primary" size="lg">
-                        Get Started
+                      {/*TODO. 페이지 바꾸기*/}
+                      <Button className="btn-round"
+                              color="primary" size="lg"
+                              onClick={signInCheck}
+                      >
+                        Sign In
+                      </Button>
+
+                      <Button className="btn-simple"
+                              color="primary" size="lg"
+                              to="signUp-page"
+                              tag={Link}
+                      >
+                        Sign Up
                       </Button>
                     </CardFooter>
                   </Card>
