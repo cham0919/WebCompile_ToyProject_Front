@@ -61,16 +61,19 @@ export default function RegisterPage() {
     let frm = new FormData()
     frm.append('id', id)
     frm.append('pw', pw)
-    // frm.append('rememberMe', String.valueOf(rememberMe))
+    frm.append('remember-me', rememberMe.toString())
+
+    console.log(rememberMe.toString())
 
     Axios.post(url, frm)
         .then(function (response) {
           // response
-          console.log(response)
+          alert("로그인성공")
+          window.location.href = "/components";
         }).catch(function (error) {
       // 오류발생시 실행
       setFailSignCheck(failSignCheck+1);
-      console.log("로그인 실패!" , failSignCheck)
+      alert("로그인 실패")
     }).then(function() {
       // 항상 실행
     });
