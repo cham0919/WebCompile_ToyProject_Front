@@ -1,5 +1,5 @@
-// var defaultUrl = localStorageGetItem("api-url") || "https://ce.judge0.com";
-var defaultUrl = "http://localhost:3000";
+var defaultUrl = localStorageGetItem("api-url") || "https://ce.judge0.com";
+var localUrl = "http://localhost:3000";
 var apiUrl = defaultUrl;
 var wait = localStorageGetItem("wait") || false;
 var check_timeout = 300;
@@ -198,18 +198,13 @@ function handleRunError(jqXHR, textStatus, errorThrown) {
 function handleResult(data) {
     timeEnd = performance.now();
     console.log("It took " + (timeEnd - timeStart) + " ms to get submission result.");
-    console.log("??", data[0].status.id);
-    var result = "";
-    for(let i = 0; i < data.length; i++ ){
-        let id = data[i].status.id;
-        if(id == 3){
-            result += "테스트 "+(i+1)+" : 통과\n";
-        }else {
-            result += "테스트 "+(i+1)+" : 실패\n";
-            break;
-        }
+    var result;
+    let id = data.status.id;
+    if(id == 3){
+        result = "테스트  : 통과\n";
+    }else {
+        result = "테스트  : 실패\n";
     }
-    console.log(result)
     // var stdout = decode(data.stdout);
     // var stderr = decode(data.stderr);
     // var compile_output = decode(data.compile_output);
@@ -229,7 +224,7 @@ function handleResult(data) {
     // }
 
     // stdoutEditor.setValue(stdout);
-    stdoutEditor.setValue(result);
+    stdoutEditor.setValue(stdoutEditor.getValue() + result);
     // stderrEditor.setValue(stderr);
     // compileOutputEditor.setValue(compile_output);
     // sandboxMessageEditor.setValue(sandbox_message);
@@ -346,7 +341,7 @@ function run() {
         timeStart = performance.now();
         $.ajax({
             // url: apiUrl + `/submissions?base64_encoded=true&wait=${wait}`,
-            url: apiUrl + `/wcp/coding/submit/` + postId,
+            url: localUrl + `/wcp/coding/submit/` + postId,
             type: "POST",
             async: true,
             contentType: "application/json",
@@ -355,12 +350,18 @@ function run() {
                 withCredentials: apiUrl.indexOf("/secure") != -1 ? true : false
             },
             success: function (data, textStatus, jqXHR) {
-                // console.log(`Your submission token is: ${data.token}`);
-                // if (wait == true) {
+                console.log(`Your submission token is: `);
+                console.log(data);
+                if (wait == true) {
                     handleResult(data);
-                // } else {
-                //     setTimeout(fetchSubmission.bind(null, data.token), check_timeout);
-                // }
+                } else {
+                    // setTimeout(fetchSubmission.bind(null, data.token), check_timeout);
+                    for(let i = 0; i < data.length; i++){
+                        // fetchSubmission(data[i].token);
+                        setTimeout(fetchSubmission.bind(null, data[i].token), check_timeout);
+                    }
+
+                }
             },
             error: handleRunError
         });
@@ -395,13 +396,16 @@ function run() {
 }
 
 function fetchSubmission(submission_token) {
+    console.log("왜 언디파인드? :: ", submission_token)
     $.ajax({
         url: apiUrl + "/submissions/" + submission_token + "?base64_encoded=true",
         type: "GET",
         async: true,
         success: function (data, textStatus, jqXHR) {
             if (data.status.id <= 2) { // In Queue or Processing
+                console.log("로딩중??", submission_token)
                 setTimeout(fetchSubmission.bind(null, submission_token), check_timeout);
+                // fetchSubmission(submission_token);
                 return;
             }
             handleResult(data);
