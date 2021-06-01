@@ -36,8 +36,10 @@ import {
   Col,
   UncontrolledTooltip,
 } from "reactstrap";
+import {useHistory} from "react-router";
 
 export default function IndexNavbar() {
+  const history = useHistory();
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [collapseOut, setCollapseOut] = React.useState("");
   const [color, setColor] = React.useState("navbar-transparent");
@@ -45,24 +47,27 @@ export default function IndexNavbar() {
   const [userName, setuserName] = React.useState("");
   React.useEffect(() => {
     window.addEventListener("scroll", changeColor);
+
+    //login check
+    Axios.get("/wcp/user/check")
+        .then(function (response) {
+          // response
+          setIsLogin(true)
+          setuserName(response.data)
+        }).catch(function (error) {
+      // 오류발생시 실행
+      setIsLogin(false)
+      setuserName("SignIn")
+    }).then(function() {
+      // 항상 실행
+    });
+
     return function cleanup() {
       window.removeEventListener("scroll", changeColor);
     };
   },[]);
 
-  //login check
-  Axios.get("/wcp/user/check")
-      .then(function (response) {
-        // response
-        setIsLogin(true)
-        setuserName(response.data)
-      }).catch(function (error) {
-    // 오류발생시 실행
-    setIsLogin(false)
-    setuserName("SignIn")
-  }).then(function() {
-    // 항상 실행
-  });
+
 
   const getUrlFromSignInCheck = () => {
     return isLogin ? "/userHome-page" : "/register-page";
@@ -114,7 +119,8 @@ export default function IndexNavbar() {
         .then(function (response) {
           // response
           console.log(response)
-          window.location.href="/components";
+          history.push("/components");
+          // window.location.href="/components";
         }).catch(function (error) {
       // 오류발생시 실행
     }).then(function() {
