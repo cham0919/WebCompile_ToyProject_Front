@@ -156,22 +156,6 @@ export default function WebCompiler(props) {
             <div className="item borderless">
                 <select id="select-language" className="ui dropdown">
                     {renderingLanguage()}
-                    {/*<option value="50" mode="c">C</option>
-                    <option value="54" mode="cpp">C++</option>
-                    <option value="51" mode="csharp">C#</option>
-                    <option value="86" mode="clojure">Clojure</option>
-                    <option value="60" mode="go">Go</option>
-                    <option value="62" mode="java">Java</option>
-                    <option value="63" mode="javascript">JavaScript</option>
-                    <option value="78" mode="kotlin">Kotlin</option>
-                    <option value="71" mode="python">Python</option>
-                    <option value="80" mode="r">R</option>
-                    <option value="72" mode="ruby">Ruby</option>
-                    <option value="73" mode="rust">Rust</option>
-                    <option value="81" mode="UNKNOWN">Scala</option>
-                    <option value="82" mode="sql">SQL</option>
-                    <option value="83" mode="swift">Swift</option>
-                    <option value="74" mode="typescript">TypeScript</option>*/}
                 </select>
             </div>
            <div className="item fitted borderless wide screen only">
