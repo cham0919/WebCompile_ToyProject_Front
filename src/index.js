@@ -17,18 +17,24 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
-import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import {BrowserRouter, Redirect, Route, Switch} from "react-router-dom";
 
 import "assets/css/nucleo-icons.css";
 import "assets/scss/blk-design-system-react.scss?v=1.2.0";
 import "assets/demo/demo.css";
 
+
 import Index from "views/Index.js";
-import LandingPage from "views/examples/LandingPage.js";
-import RegisterPage from "views/examples/RegisterPage.js";
-import ProfilePage from "views/examples/ProfilePage.js";
-import Signup from "./views/IndexSections/Signup";
-import SignUpPage from "./views/examples/SignUpPage";
+import LandingPage from "views/page/LandingPage.js";
+import RegisterPage from "views/page/RegisterPage.js";
+import ProfilePage from "views/page/ProfilePage.js";
+import SignUpPage from "./views/page/SignUpPage";
+import InsertCodeBoardPage from "./views/page/InsertCodeBoardPage";
+import CodeBoardPostPage from "./views/page/CodeBoardPostPage";
+import CreateCodingTestPage from "./views/page/codingBoard/CreateCodingTestPage";
+import WebCompiler from "./views/ide/WebCompiler";
+
+
 
 ReactDOM.render(
   <BrowserRouter>
@@ -37,6 +43,10 @@ ReactDOM.render(
       <Route
         path="/landing-page"
         render={(props) => <LandingPage {...props} />}
+      />
+      <Route
+          path="/mainboard-page"
+          render={(props) => <RegisterPage {...props} />}
       />
       <Route
         path="/register-page"
@@ -49,6 +59,22 @@ ReactDOM.render(
       <Route
           path="/signUp-page"
           render={(props) => <SignUpPage {...props} />}
+      />
+      <Route
+          path="/insert-codeBoard-page"
+          render={(props) => <InsertCodeBoardPage {...props} />}
+      />
+      <Route
+          path="/codeBoard-post-page/:postId"
+          render={(props) => <CodeBoardPostPage {...props} />}
+      />
+      <Route
+          path="/create/codingTest/:postId"
+          render={(props) => <CreateCodingTestPage {...props} />}
+      />
+      <Route
+          path="/wcp/ide/:testId"
+          render={(props) => <WebCompiler {...props} />}
       />
       <Redirect from="/" to="/components" />
     </Switch>
