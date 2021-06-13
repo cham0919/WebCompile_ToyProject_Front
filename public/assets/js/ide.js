@@ -195,66 +195,25 @@ function handleRunError(jqXHR, textStatus, errorThrown) {
     $runBtn.removeClass("loading");
 }
 
-function handleResult(data) {
+function handleResult(data, number, size) {
     timeEnd = performance.now();
     console.log("It took " + (timeEnd - timeStart) + " ms to get submission result.");
     var result;
     let id = data.status.id;
     if(id == 3){
-        result = "테스트  : 통과\n";
+        result = "테스트 "+ number + " : 통과\n";
     }else {
-        result = "테스트  : 실패\n";
+        result = "테스트 "+ number + " : 실패\n";
     }
-    // var stdout = decode(data.stdout);
-    // var stderr = decode(data.stderr);
-    // var compile_output = decode(data.compile_output);
-    // var sandbox_message = decode(data.message);
-    // var time = (data.time === null ? "-" : data.time + "s");
-    // var memory = (data.memory === null ? "-" : data.memory + "KB");
 
-    // $statusLine.html(`${status.description}, ${time}, ${memory}`);
-
-    // if (blinkStatusLine) {
-    //     $statusLine.addClass("blink");
-    //     setTimeout(function() {
-    //         blinkStatusLine = false;
-    //         localStorageSetItem("blink", "false");
-    //         $statusLine.removeClass("blink");
-    //     }, 3000);
-    // }
-
-    // stdoutEditor.setValue(stdout);
     stdoutEditor.setValue(stdoutEditor.getValue() + result);
-    // stderrEditor.setValue(stderr);
-    // compileOutputEditor.setValue(compile_output);
-    // sandboxMessageEditor.setValue(sandbox_message);
 
-    /*if (stdout !== "") {
-        var dot = document.getElementById("stdout-dot");
-        if (!dot.parentElement.classList.contains("lm_active")) {
-            dot.hidden = false;
-        }
+    if(stdoutEditor.getValue().length == size*11){
+        let status = stdoutEditor.getValue().includes("실패") ? 1 : 0;
+        registerSubmit(status);
     }
-    if (stderr !== "") {
-        var dot = document.getElementById("stderr-dot");
-        if (!dot.parentElement.classList.contains("lm_active")) {
-            dot.hidden = false;
-        }
-    }
-    if (compile_output !== "") {
-        var dot = document.getElementById("compile-output-dot");
-        if (!dot.parentElement.classList.contains("lm_active")) {
-            dot.hidden = false;
-        }
-    }
-    if (sandbox_message !== "") {
-        var dot = document.getElementById("sandbox-message-dot");
-        if (!dot.parentElement.classList.contains("lm_active")) {
-            dot.hidden = false;
-        }
-    }*/
-
     $runBtn.removeClass("loading");
+    return id;
 }
 
 function getIdFromURI() {
@@ -355,10 +314,9 @@ function run() {
                 if (wait == true) {
                     handleResult(data);
                 } else {
-                    // setTimeout(fetchSubmission.bind(null, data.token), check_timeout);
                     for(let i = 0; i < data.length; i++){
-                        // fetchSubmission(data[i].token);
-                        setTimeout(fetchSubmission.bind(null, data[i].token), check_timeout);
+                        let singleStatus = fetchSubmission(data[i].token, i+1, data.length);
+                        // setTimeout(fetchSubmission.bind(null, data[i].token, i+1), check_timeout);
                     }
 
                 }
@@ -395,20 +353,49 @@ function run() {
     }
 }
 
-function fetchSubmission(submission_token) {
-    console.log("왜 언디파인드? :: ", submission_token)
+function registerSubmit(status){
+    let localuri = window.location.href;
+    localuri =  localuri.split("/");
+    let postId =  localuri[localuri.length -1];
+
+    let sourceValue = encode(sourceEditor.getValue());
+    let languageId = resolveLanguageId($selectLanguage.val());
+
+    let data = {
+        source_code: sourceValue,
+        language_id: languageId,
+        status: status
+    };
+
+    $.ajax({
+        url: localUrl + "/wcp/coding/submit/final/" + postId,
+        type: "POST",
+        async: true,
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (data) {
+            if(status == 0){
+                alert("테스트 성공");
+                window.location.href = "/codeBoard-post-page/" + data;
+            }else{
+                alert("테스트 실패");
+            }
+        },
+        error: handleRunError
+    });
+}
+
+function fetchSubmission(submission_token, number, size) {
     $.ajax({
         url: apiUrl + "/submissions/" + submission_token + "?base64_encoded=true",
         type: "GET",
         async: true,
         success: function (data, textStatus, jqXHR) {
             if (data.status.id <= 2) { // In Queue or Processing
-                console.log("로딩중??", submission_token)
-                setTimeout(fetchSubmission.bind(null, submission_token), check_timeout);
-                // fetchSubmission(submission_token);
+                setTimeout(fetchSubmission.bind(null, submission_token, number, size), check_timeout);
                 return;
             }
-            handleResult(data);
+            return handleResult(data, number, size);
         },
         error: handleRunError
     });
