@@ -43,8 +43,10 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import {Link} from "react-router-dom";
+import {useHistory} from "react-router";
 
 export default function RegisterPage() {
+  const history = useHistory();
   const [squares1to6, setSquares1to6] = React.useState("");
   const [squares7and8, setSquares7and8] = React.useState("");
   const [IDFocus, setIDFocus] = React.useState(false);
@@ -57,19 +59,29 @@ export default function RegisterPage() {
 
 
   const signInCheck = () => {
-    const url = '/wcp/signin';
+    const url = '/wcp/auth';
     let frm = new FormData()
-    frm.append('id', id)
-    frm.append('pw', pw)
-    frm.append('remember-me', rememberMe.toString())
+    // frm.append('id', id)
+    // frm.append('password', pw)
+    // frm.append('remember-me', rememberMe.toString())
 
-    console.log(rememberMe.toString())
+    let data = {
+      id : id,
+      password : pw
+    }
 
-    Axios.post(url, frm)
+    // console.log(rememberMe.toString())
+
+    Axios.post(url, data)
         .then(function (response) {
           // response
+          console.log(response)
+          const { accessToken } = response.data;
+
+          Axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
           alert("로그인성공")
-          window.location.href = "/components";
+          history.push("/components");
+          // window.location.href = "/components";
         }).catch(function (error) {
       // 오류발생시 실행
       setFailSignCheck(failSignCheck+1);
