@@ -70,7 +70,7 @@ export default function InsertCodeBoardPage() {
   }
 
   const submitCodePost = () => {
-    const url = "/wcp/coding/board/"
+    const url = "/wcp/coding/room/"
     let title = document.getElementById("title").value;
     let intro = document.getElementById("intro").value;
     let password = document.getElementById("password").value.trim();
