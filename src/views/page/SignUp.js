@@ -16,31 +16,20 @@
 
 */
 import React from "react";
-import classnames from "classnames";
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
 // reactstrap components
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
-  Label,
-  FormGroup,
-  Form,
-  Input,
-  FormText,
-  NavItem,
-  NavLink,
-  Nav,
-  Table,
-  TabContent,
-  TabPane,
-  Container,
-  Row,
+  CardHeader,
   Col,
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  Row,
   UncontrolledTooltip,
-  UncontrolledCarousel,
 } from "reactstrap";
 
 // core components
@@ -48,6 +37,7 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import {useHistory} from "react-router";
+import IndexNavbar from "../../components/Navbars/IndexNavbar";
 
 const carouselItems = [
   {
@@ -68,11 +58,11 @@ const carouselItems = [
 ];
 
 
-export default function SignUpPage() {
+export default function SignUp() {
   const [tabs, setTabs] = React.useState(1);
   const history = useHistory();
   const signUp = () => {
-    const url = "/wcp/user/signUp"
+    const url = "/wcp/signUp"
     let name = document.getElementById("name").value
     let email = document.getElementById("email").value
     let phone = document.getElementById("phone").value
@@ -87,8 +77,7 @@ export default function SignUpPage() {
     Axios.post(url, data)
         .then(function (response) {
           alert("Success To SignUp!");
-          history.push("/register-page");
-          // window.location.href = "/register-page";
+          history.push("/login");
         }).catch(function (error) {
       alert("Fail To SingUp!")
     }).then(function() {
@@ -102,19 +91,19 @@ export default function SignUpPage() {
       document.documentElement.classList.remove("perfect-scrollbar-off");
       let tables = document.querySelectorAll(".table-responsive");
     }
-    document.body.classList.toggle("signUp-page");
+    document.body.classList.toggle("signUp");
     // Specify how to clean up after this effect:
     return function cleanup() {
       if (navigator.platform.indexOf("Win") > -1) {
         document.documentElement.className += " perfect-scrollbar-off";
         document.documentElement.classList.remove("perfect-scrollbar-on");
       }
-      document.body.classList.toggle("signUp-page");
+      document.body.classList.toggle("signUp");
     };
   },[]);
   return (
     <>
-      <ExamplesNavbar />
+      <IndexNavbar />
       <div className="wrapper">
         <section className="section">
           <Container>

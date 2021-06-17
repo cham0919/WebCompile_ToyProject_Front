@@ -44,8 +44,9 @@ import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import {Link} from "react-router-dom";
 import {useHistory} from "react-router";
+import IndexNavbar from "../../components/Navbars/IndexNavbar";
 
-export default function RegisterPage() {
+export default function SignIn() {
   const history = useHistory();
   const [squares1to6, setSquares1to6] = React.useState("");
   const [squares7and8, setSquares7and8] = React.useState("");
@@ -60,45 +61,29 @@ export default function RegisterPage() {
 
   const signInCheck = () => {
     const url = '/wcp/auth';
-    let frm = new FormData()
-    // frm.append('id', id)
-    // frm.append('password', pw)
-    // frm.append('remember-me', rememberMe.toString())
 
     let data = {
       id : id,
       password : pw
     }
 
-    // console.log(rememberMe.toString())
-
     Axios.post(url, data)
         .then(function (response) {
-          // response
-          console.log(response)
-          const { accessToken } = response.data;
-
-          Axios.defaults.headers.common['Authorization'] = `Bearer ${accessToken}`;
           alert("로그인성공")
           history.push("/components");
-          // window.location.href = "/components";
         }).catch(function (error) {
       // 오류발생시 실행
       setFailSignCheck(failSignCheck+1);
       alert("로그인 실패")
-    }).then(function() {
-      // 항상 실행
     });
   }
 
-
-
   React.useEffect(() => {
-    document.body.classList.toggle("register-page");
+    document.body.classList.toggle("login");
     document.documentElement.addEventListener("mousemove", followCursor);
     // Specify how to clean up after this effect:
     return function cleanup() {
-      document.body.classList.toggle("register-page");
+      document.body.classList.toggle("login");
       document.documentElement.removeEventListener("mousemove", followCursor);
     };
   },[]);
@@ -122,7 +107,7 @@ export default function RegisterPage() {
   };
   return (
     <>
-      <ExamplesNavbar />
+      <IndexNavbar />
       <div className="wrapper">
         <div className="page-header">
           <div className="page-header-image" />
@@ -238,7 +223,7 @@ export default function RegisterPage() {
 
                       <Button className="btn-simple"
                               color="primary" size="lg"
-                              to="signUp-page"
+                              to="signUp"
                               tag={Link}
                       >
                         Sign Up
