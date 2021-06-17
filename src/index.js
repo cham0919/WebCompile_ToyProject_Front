@@ -26,9 +26,9 @@ import "assets/demo/demo.css";
 
 import Index from "views/Index.js";
 import LandingPage from "views/page/LandingPage.js";
-import RegisterPage from "views/page/RegisterPage.js";
+import SignIn from "views/page/SignIn.js";
 import ProfilePage from "views/page/ProfilePage.js";
-import SignUpPage from "./views/page/SignUpPage";
+import SignUp from "./views/page/SignUp";
 import InsertCodeBoardPage from "./views/page/InsertCodeBoardPage";
 import CodeBoardPostPage from "./views/page/CodeBoardPostPage";
 import CreateCodingTestPage from "./views/page/codingBoard/CreateCodingTestPage";
@@ -46,19 +46,19 @@ ReactDOM.render(
       />
       <Route
           path="/mainboard-page"
-          render={(props) => <RegisterPage {...props} />}
+          render={(props) => <SignIn {...props} />}
       />
       <Route
-        path="/register-page"
-        render={(props) => <RegisterPage {...props} />}
+        path="/login"
+        render={(props) => <SignIn {...props} />}
       />
       <Route
         path="/profile-page"
         render={(props) => <ProfilePage {...props} />}
       />
       <Route
-          path="/signUp-page"
-          render={(props) => <SignUpPage {...props} />}
+          path="/signUp"
+          render={(props) => <SignUp {...props} />}
       />
       <Route
           path="/insert-codeBoard-page"
