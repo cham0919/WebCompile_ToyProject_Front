@@ -129,7 +129,7 @@ export default function IndexNavbar() {
       .scrollIntoView({ behavior: "smooth" });
   };
   const Logout = () => {
-    Axios.post("/wcp/auth/logout")
+    Axios.get("/wcp/auth/logout")
         .then(function (response) {
           // response
           setIsLogin(false)
