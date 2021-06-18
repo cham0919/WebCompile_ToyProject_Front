@@ -49,11 +49,12 @@ export default function IndexNavbar() {
     window.addEventListener("scroll", changeColor);
 
     //login check
-    Axios.get("/wcp/user/check")
-        .then(function (response) {
+    Axios.get("/wcp/auth/check")
+        .then(function (data) {
           // response
-          setIsLogin(true)
-          setuserName(response.data)
+          console.log(data.data.result)
+          setIsLogin(data.data.result)
+          // alert(isLogin)
         }).catch(function (error) {
       // 오류발생시 실행
       setIsLogin(false)
@@ -85,6 +86,19 @@ export default function IndexNavbar() {
     );
   }
 
+  function checkLogin(){
+    if (isLogin) {
+      return (
+          <i className="tim-icons icon-single-02" />
+      );
+    } else {
+      return (
+          "SignIn"
+      );
+    }
+  }
+
+
 
   const changeColor = () => {
     if (
@@ -115,10 +129,10 @@ export default function IndexNavbar() {
       .scrollIntoView({ behavior: "smooth" });
   };
   const Logout = () => {
-    Axios.get("/wcp/logout")
+    Axios.post("/wcp/auth/logout")
         .then(function (response) {
           // response
-          console.log(response)
+          setIsLogin(false)
           history.push("/components");
           // window.location.href="/components";
         }).catch(function (error) {
@@ -278,20 +292,9 @@ export default function IndexNavbar() {
                 color="default"
                 tag={Link} to={getUrlFromSignInCheck}
               >
-                <i className="tim-icons icon-single-02" /> {userName}
+                {checkLogin()}
               </Button>
             </NavItem>
-{/*
-            <NavItem>
-              <Button
-                className="nav-link d-none d-lg-block"
-                color="default"
-                tag={Link} to="/register-page"
-              >
-                <i className="tim-icons icon-single-02" /> SignIn
-              </Button>
-            </NavItem>
-*/}
           </Nav>
         </Collapse>
       </Container>
