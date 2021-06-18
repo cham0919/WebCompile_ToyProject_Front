@@ -62,10 +62,24 @@ export default function SignIn() {
   const signInCheck = () => {
     const url = '/wcp/auth';
 
+
+    if(id.trim() == ""){
+      alert("아이디를 입력해주세요");
+      return;
+    }
+    if(pw.trim() == ""){
+      alert("비밀번호를 입력해주세요");
+      return;
+    }
+
+
+
     let data = {
       id : id,
       password : pw
     }
+
+
 
     Axios.post(url, data)
         .then(function (response) {

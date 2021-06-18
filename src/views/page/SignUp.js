@@ -31,6 +31,7 @@ import {
   Row,
   UncontrolledTooltip,
 } from "reactstrap";
+import $ from "jquery";
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
@@ -61,12 +62,34 @@ const carouselItems = [
 export default function SignUp() {
   const [tabs, setTabs] = React.useState(1);
   const history = useHistory();
+
   const signUp = () => {
     const url = "/wcp/signUp"
     let name = document.getElementById("name").value
     let email = document.getElementById("email").value
     let phone = document.getElementById("phone").value
     let password = document.getElementById("password").value
+
+    if(name.trim() == ""){
+      alert("아이디를 입력해주세요");
+      return;
+    }
+    if(password.trim() == ""){
+      alert("비밀번호를 입력해주세요");
+      return;
+    }
+
+    if(!isEmail(email)){
+      alert("이메일을 확인해주세요");
+      return;
+    }
+
+    if(!isMobile(phone)){
+      alert("핸드폰 번호를 확인해주세요");
+      return;
+    }
+
+
 
     let data = {
       "name": name,
@@ -83,6 +106,25 @@ export default function SignUp() {
     }).then(function() {
       // 항상 실행
     });
+  }
+
+
+  const isMobile = (phoneNum) => {
+    var regExp =/(01[016789])([1-9]{1}[0-9]{2,3})([0-9]{4})$/;
+    if(regExp.test(phoneNum)){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const isEmail = (email) => {
+    var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    if(regExp.test(email)){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   React.useEffect(() => {
