@@ -53,8 +53,10 @@ export default function IndexNavbar() {
     Axios.get("/wcp/auth/check")
         .then(function (data) {
           // response
-          console.log(data.data.result)
           setIsLogin(data.data.result)
+          if (!data.data.result) {
+            storage.remove("userInfo")
+          }
           // alert(isLogin)
         }).catch(function (error) {
       // 오류발생시 실행
