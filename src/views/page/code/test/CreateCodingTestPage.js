@@ -132,7 +132,7 @@ export default function CreateCodingTestPage(props) {
         .then(function (response) {
           alert("Success To register!");
           history.push({
-            pathname: "/codeBoard-post-page/"+postId
+            pathname: "/coding/room/post/"+postId
           });
         }).catch(function (error) {
       alert("Fail To Insert!")
@@ -147,7 +147,7 @@ export default function CreateCodingTestPage(props) {
       document.documentElement.classList.remove("perfect-scrollbar-off");
       let tables = document.querySelectorAll(".table-responsive");
     }
-    document.body.classList.toggle("create/codingTest");
+    document.body.classList.toggle("coding/test/insert");
     setPostId(props.match.params.postId);
 
     // Specify how to clean up after this effect:
@@ -156,7 +156,7 @@ export default function CreateCodingTestPage(props) {
         document.documentElement.className += " perfect-scrollbar-off";
         document.documentElement.classList.remove("perfect-scrollbar-on");
       }
-      document.body.classList.toggle("create/codingTest");
+      document.body.classList.toggle("coding/test/insert");
     };
   },[]);
   return (
@@ -264,7 +264,6 @@ export default function CreateCodingTestPage(props) {
                     <i className="tim-icons icon-upload"></i>
                     <Input  id="file"  type="File" onChange={checkUploadFile}/>
                   </Button>
-
                 </FormGroup>
                 </div>
               </Col>

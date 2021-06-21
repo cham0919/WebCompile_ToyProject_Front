@@ -42,6 +42,8 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import  { useHistory} from 'react-router';
+import bigChart from "../../variables/charts";
+import IndexNavbar from "../../components/Navbars/IndexNavbar";
 
 const carouselItems = [
   {
@@ -74,15 +76,20 @@ export default function InsertCodeBoardPage() {
     let title = document.getElementById("title").value;
     let intro = document.getElementById("intro").value;
     let password = document.getElementById("password").value.trim();
-    Axios.post(url, {title, intro, password, maxUser})
+    let data
+    if (password == "") {
+      data = {title, intro, maxUser}
+    } else {
+      data = {title, intro, password, maxUser}
+    }
+
+    Axios.post(url, data)
         .then(function (response) {
           alert("Success To Insert!");
           console.log(response)
-          // history.push("/codeBoard-post-page");
-          history.push({
-            pathname: "/codeBoard-post-page/"+response.data.key.toString()
-            // search: response.data.key.toString()
-          });
+          console.log("/coding/room/post/"+response.data.key.toString())
+          // history.push("/coding/room/post");
+          history.push("/coding/room/post/"+response.data.key.toString());
         }).catch(function (error) {
       console.log(error)
       alert("Fail To Insert!")
@@ -97,19 +104,19 @@ export default function InsertCodeBoardPage() {
       document.documentElement.classList.remove("perfect-scrollbar-off");
       let tables = document.querySelectorAll(".table-responsive");
     }
-    document.body.classList.toggle("insert-codeBoard-page");
+    document.body.classList.toggle("/coding/room/insert");
     // Specify how to clean up after this effect:
     return function cleanup() {
       if (navigator.platform.indexOf("Win") > -1) {
         document.documentElement.className += " perfect-scrollbar-off";
         document.documentElement.classList.remove("perfect-scrollbar-on");
       }
-      document.body.classList.toggle("insert-codeBoard-page");
+      document.body.classList.toggle("api/coding/room/insert");
     };
   },[]);
   return (
     <>
-      <ExamplesNavbar />
+      <IndexNavbar />
       <div className="wrapper">
         <section className="section">
           <Container>
