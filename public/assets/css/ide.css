@@ -94,7 +94,8 @@ body {
 
 #site-content {
     /*height: calc(100% - 45px - 19px);*/
-    height: 658px;
+    /*height: 658px;*/
+    height: 858px;
 }
 
 #site-modal .header {
