@@ -26,13 +26,14 @@ import "assets/demo/demo.css";
 
 import Index from "views/Index.js";
 import LandingPage from "views/page/LandingPage.js";
-import SignIn from "views/page/SignIn.js";
+import SignIn from "views/page/auth/SignIn.js";
 import ProfilePage from "views/page/ProfilePage.js";
-import SignUp from "./views/page/SignUp";
+import SignUp from "./views/page/auth/SignUp";
 import InsertCodeBoardPage from "./views/page/InsertCodeBoardPage";
-import CodeBoardPostPage from "./views/page/CodeBoardPostPage";
-import CreateCodingTestPage from "./views/page/codingBoard/CreateCodingTestPage";
+import CodingRoomPost from "./views/page/code/room/CodingRoomPost";
+import CreateCodingTestPage from "./views/page/code/test/CreateCodingTestPage";
 import WebCompiler from "./views/ide/WebCompiler";
+import CodingRoom from "./views/page/code/room/CodingRoom";
 
 
 
@@ -45,8 +46,16 @@ ReactDOM.render(
         render={(props) => <LandingPage {...props} />}
       />
       <Route
-          path="/mainboard-page"
-          render={(props) => <SignIn {...props} />}
+          path="/coding/room/insert"
+          render={(props) => <InsertCodeBoardPage {...props} />}
+      />
+      <Route
+          path="/coding/room/post/:postId"
+          render={(props) => <CodingRoomPost {...props} />}
+      />
+      <Route
+          path="/coding/room"
+          render={(props) => <CodingRoom {...props} />}
       />
       <Route
         path="/login"
@@ -60,16 +69,9 @@ ReactDOM.render(
           path="/signUp"
           render={(props) => <SignUp {...props} />}
       />
+
       <Route
-          path="/insert-codeBoard-page"
-          render={(props) => <InsertCodeBoardPage {...props} />}
-      />
-      <Route
-          path="/codeBoard-post-page/:postId"
-          render={(props) => <CodeBoardPostPage {...props} />}
-      />
-      <Route
-          path="/create/codingTest/:postId"
+          path="/coding/test/insert/:postId"
           render={(props) => <CreateCodingTestPage {...props} />}
       />
       <Route

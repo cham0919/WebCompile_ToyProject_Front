@@ -35,7 +35,7 @@ import NucleoIcons from "views/IndexSections/NucleoIcons.js";
 import Signup from "views/IndexSections/Signup.js";
 import Examples from "views/IndexSections/Examples.js";
 import Download from "views/IndexSections/Download.js";
-import MainBoardPage from "./page/MainBoardPage";
+import CodingRoom from "./page/code/room/CodingRoom";
 
 export default function Index() {
   React.useEffect(() => {
@@ -51,7 +51,7 @@ export default function Index() {
       <div className="wrapper">
         <PageHeader />
         <div className="main">
-          <MainBoardPage />
+          <CodingRoom />
           <Basics />
           <Navbars />
           <Tabs />
