@@ -48,6 +48,8 @@ class CodingRoomInfo {
         this.key = data.key;
         this.title = data.title;
         this.maxUser = data.maxUser;
+        this.joinUser = data.codingJoinUsers.length;
+        this.testCount = data.codingTests.length;
     }
 }
 
@@ -64,10 +66,9 @@ export default function CodingRoom() {
                 const datas = response.data;
                 let codingRoomInfoList = [];
                 console.log(response.data)
-                for (const data in datas) {
+                for (const data of datas) {
                     codingRoomInfoList.push(new CodingRoomInfo(data));
                 }
-                console.log(codingRoomInfoList)
                 setCodingRoomInfoList(codingRoomInfoList)
             }).catch(function (error) {
             console.log(error)
@@ -77,20 +78,22 @@ export default function CodingRoom() {
 
     const getPosts = () => {
         const postInfo = [];
-        if (codingRoomInfoList.length != 0) {
+        if (codingRoomInfoList.length == 0) {
             postInfo.push(
                 <tr>
+                    <td className="text-center"></td>
                     <td className="text-center"></td>
                     <td>No Post</td>
                 </tr>
             );
         }else{
-            for (const codingRoomInfo in codingRoomInfoList) {
+            for (const codingRoomInfo of codingRoomInfoList) {
                 postInfo.push(
                     <tr>
                         <td className="text-center">{codingRoomInfo.key}</td>
-                        <td>{codingRoomInfo.title}</td>
-                        {/*<td>0 / {codingRoomInfo.maxUser}</td>*/}
+                        <td className="text-center"><a href={"/coding/room/post/" + codingRoomInfo.key}>{codingRoomInfo.title}</a></td>
+                        <td className="text-right">{codingRoomInfo.joinUser} / {codingRoomInfo.maxUser}</td>
+                        <td className="text-center">{codingRoomInfo.testCount}</td>
                     </tr>
                 );
             }
@@ -104,7 +107,7 @@ export default function CodingRoom() {
         if (userInfo != null && userInfo.role == "MEMBER") {
             result.push(
                 <tr>
-                    <td></td><td></td><td></td><td></td><td></td>
+                    <td></td><td></td><td></td>
                     <td className="text-right">
                         <Button className="btn-round"
                                 color="primary"
@@ -139,13 +142,15 @@ export default function CodingRoom() {
             document.body.classList.toggle("coding/room");
         };
     },[]);
-    return (<>
+    return (
+        <>
             <Table>
                 <thead>
                 <tr>
                     <th className="text-center">#</th>
-                    <th>Title</th>
-                    <th>User</th>
+                    <th className="text-center">Title</th>
+                    <th className="text-right">User</th>
+                    <th className="text-center">TestCount</th>
                 </tr>
                 </thead>
                 <tbody>

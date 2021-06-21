@@ -42,6 +42,7 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import  { useHistory} from 'react-router';
+import IndexNavbar from "../../../../components/Navbars/IndexNavbar";
 
 const carouselItems = [
   {
@@ -161,7 +162,7 @@ export default function CreateCodingTestPage(props) {
   },[]);
   return (
     <>
-      <ExamplesNavbar />
+      <IndexNavbar />
       <div className="wrapper">
         <section className="section">
           <Container>
