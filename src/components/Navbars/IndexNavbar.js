@@ -37,6 +37,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import {useHistory} from "react-router";
+import storage from "../../lib/storage";
 
 export default function IndexNavbar() {
   const history = useHistory();
@@ -45,7 +46,7 @@ export default function IndexNavbar() {
   const [color, setColor] = React.useState("navbar-transparent");
   const [isLogin, setIsLogin] = React.useState(false);
   const [userName, setuserName] = React.useState("");
-  React.useEffect(() => {
+  React.useEffect(() => { getUrlFromSignInCheck()
     window.addEventListener("scroll", changeColor);
 
     //login check
@@ -69,6 +70,9 @@ export default function IndexNavbar() {
   },[]);
 
 
+  const getIsLogin = () => {
+    return isLogin;
+  }
 
   const getUrlFromSignInCheck = () => {
     return isLogin ? "/userHome-page" : "/login";
@@ -133,6 +137,7 @@ export default function IndexNavbar() {
         .then(function (response) {
           // response
           setIsLogin(false)
+          storage.remove("userInfo")
           history.push("/components");
           // window.location.href="/components";
         }).catch(function (error) {
