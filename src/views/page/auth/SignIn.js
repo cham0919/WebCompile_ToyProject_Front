@@ -21,30 +21,41 @@ import classnames from "classnames";
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
   CardFooter,
+  CardHeader,
   CardImg,
   CardTitle,
-  Label,
-  FormGroup,
+  Col,
+  Container,
   Form,
+  FormGroup,
   Input,
+  InputGroup,
   InputGroupAddon,
   InputGroupText,
-  InputGroup,
-  Container,
+  Label,
   Row,
-  Col,
 } from "reactstrap";
 
+
 // core components
-import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import {Link} from "react-router-dom";
 import {useHistory} from "react-router";
-import IndexNavbar from "../../components/Navbars/IndexNavbar";
+import IndexNavbar from "../../../components/Navbars/IndexNavbar";
+import storage from "../../../lib/storage";
+
+
+class UserInfo {
+  constructor(data) {
+    this.id = data.id;
+    this.role = data.role;
+  }
+}
+
+
 
 export default function SignIn() {
   const history = useHistory();
@@ -72,18 +83,15 @@ export default function SignIn() {
       return;
     }
 
-
-
     let data = {
       id : id,
       password : pw
     }
 
-
-
     Axios.post(url, data)
         .then(function (response) {
           alert("로그인성공")
+          storage.set("userInfo", new UserInfo(response.data))
           history.push("/components");
         }).catch(function (error) {
       // 오류발생시 실행

@@ -38,7 +38,7 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import {useHistory} from "react-router";
-import IndexNavbar from "../../components/Navbars/IndexNavbar";
+import IndexNavbar from "../../../components/Navbars/IndexNavbar";
 
 const carouselItems = [
   {
