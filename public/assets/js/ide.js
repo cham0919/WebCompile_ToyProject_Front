@@ -376,7 +376,7 @@ function registerSubmit(status){
         success: function (data) {
             if(status == 0){
                 alert("테스트 성공");
-                window.location.href = "/codeBoard-post-page/" + data;
+                window.location.href = "/coding/room/post/" + data;
             }else{
                 alert("테스트 실패");
             }
