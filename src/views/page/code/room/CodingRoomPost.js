@@ -22,6 +22,7 @@ import {Button, Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Row
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
+import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Axios from "axios";
 import {useLocation} from "react-router";
 import {Link} from "react-router-dom";
@@ -45,7 +46,7 @@ const carouselItems = [
 ];
 
 
-export default function CodeBoardPostPage(props) {
+export default function CodingRoomPost(props) {
   const location = useLocation();
   const [title, setTitle] = React.useState("");
   const [intro, setIntro] = React.useState("");
@@ -61,8 +62,8 @@ export default function CodeBoardPostPage(props) {
 
   const fetchPostInfo = (postId) => {
     setPostId(postId);
-    setCodingTestUrl("/create/codingTest/"+postId);
-    const url = "/wcp/coding/board/"+postId;
+    setCodingTestUrl("/coding/test/insert/"+postId);
+    const url = "/wcp/coding/room/"+postId;
     Axios.get(url)
         .then(function (response) {
           //글 등록
@@ -81,7 +82,7 @@ export default function CodeBoardPostPage(props) {
 
   const checkSecretPost = () => {
     const result = [];
-    if(password.trim() != ""){
+    if(password && password.trim() != ""){
       result.push(
           <i className="tim-icons icon-lock-circle"/>
       );
@@ -114,7 +115,6 @@ export default function CodeBoardPostPage(props) {
             </tr>
         );
       }
-
     }
 
     return result;
@@ -127,7 +127,7 @@ export default function CodeBoardPostPage(props) {
       document.documentElement.classList.remove("perfect-scrollbar-off");
       let tables = document.querySelectorAll(".table-responsive");
     }
-    document.body.classList.toggle("codeBoard-post-page");
+    document.body.classList.toggle("coding/room/post");
     fetchPostInfo(props.match.params.postId);
 
     // Specify how to clean up after this effect:
@@ -136,82 +136,82 @@ export default function CodeBoardPostPage(props) {
         document.documentElement.className += " perfect-scrollbar-off";
         document.documentElement.classList.remove("perfect-scrollbar-on");
       }
-      document.body.classList.toggle("codeBoard-post-page");
+      document.body.classList.toggle("coding/room/post");
     };
   },[]);
   return (
-    <>
-      <ExamplesNavbar />
-      <div className="wrapper">
-        <section className="section">
-          <Container>
-            <Row>
-              <Col md="6">
-                <Card className="card-plain">
-                  <CardHeader>
-                    <h1 className="profile-title text-left">
-                      {checkSecretPost()}{title}</h1>
-                  </CardHeader>
-                  <CardBody>
-                    <Form>
-                      <Row>
-                        <Col md="6">
-                          <FormGroup>
-                            <label>intro</label><br/>
-                            {intro}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Row>
-                        <Col md="2">
-                          <FormGroup>
-                            <label>Join User</label><br/>
-                            {currentUser}/{maxUser}
-                          </FormGroup>
-                        </Col>
-                      </Row>
-                      <Button
-                        className="btn-round float-right"
-                        color="primary"
-                        data-placement="right"
-                        id="tooltip341148792"
-                        type="button"
-                        tag={Link} to={codingTestUrl}
-                      >
-                        Create Test
-                      </Button>
-                      <Button
-                          className="btn-round float-right"
-                          color="primary"
-                          data-placement="right"
-                          id="tooltip341148792"
-                          type="button"
-                      >
-                        Join
-                      </Button>
-                    </Form>
-                  </CardBody>
-                </Card>
-              </Col>
-              <Col md="6">
-                <Table>
-                  <thead>
-                  <tr>
-                    <th className="text-center">#</th>
-                    <th>Title</th>
-                    <th>Pass</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  {getContents()}
-                  </tbody>
-                </Table>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-        <Footer />
-      </div>
-    </>
+      <>
+        <ExamplesNavbar />
+        <div className="wrapper">
+          <section className="section">
+            <Container>
+              <Row>
+                <Col md="6">
+                  <Card className="card-plain">
+                    <CardHeader>
+                      <h1 className="profile-title text-left">
+                        {checkSecretPost()}{title}</h1>
+                    </CardHeader>
+                    <CardBody>
+                      <Form>
+                        <Row>
+                          <Col md="6">
+                            <FormGroup>
+                              <label>intro</label><br/>
+                              {intro}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Row>
+                          <Col md="2">
+                            <FormGroup>
+                              <label>Join User</label><br/>
+                              {currentUser}/{maxUser}
+                            </FormGroup>
+                          </Col>
+                        </Row>
+                        <Button
+                            className="btn-round float-right"
+                            color="primary"
+                            data-placement="right"
+                            id="tooltip341148792"
+                            type="button"
+                            tag={Link} to={codingTestUrl}
+                        >
+                          Create Test
+                        </Button>
+                        <Button
+                            className="btn-round float-right"
+                            color="primary"
+                            data-placement="right"
+                            id="tooltip341148792"
+                            type="button"
+                        >
+                          Join
+                        </Button>
+                      </Form>
+                    </CardBody>
+                  </Card>
+                </Col>
+                <Col md="6">
+                  <Table>
+                    <thead>
+                    <tr>
+                      <th className="text-center">#</th>
+                      <th>Title</th>
+                      <th>Pass</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {getContents()}
+                    </tbody>
+                  </Table>
+                </Col>
+              </Row>
+            </Container>
+          </section>
+          <Footer />
+        </div>
+      </>
   );
 }
