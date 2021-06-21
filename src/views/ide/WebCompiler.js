@@ -235,7 +235,7 @@ export default function WebCompiler(props) {
       </div>
 
       <div id="site-content"></div>
-        <input id="content" value={content} readOnly/>
+        <input type="hidden" id="content" value={content} readOnly/>
 
       <div id="site-modal" className="ui modal">
         <div className="header">
