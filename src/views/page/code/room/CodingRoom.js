@@ -22,6 +22,7 @@ import {Button, Table,} from "reactstrap";
 
 // core components
 import {Link} from "react-router-dom";
+import Axios from "axios";
 
 const carouselItems = [
     {
@@ -41,9 +42,32 @@ const carouselItems = [
     },
 ];
 
+class CodingRoom {
+    constructor(data) {
+        this.key = data.key;
+        this.title = data.title;
+        this.maxUser = data.maxUser;
+    }
+}
 
 export default function MainBoardPage() {
     const [tabs, setTabs] = React.useState(1);
+    const [post, setPost] = React.useState("");
+
+
+    const fetchCodingRooms = () => {
+        const url = "/wcp/coding/room";
+        Axios.get(url)
+            .then(function (response) {
+                //글 등록
+                const data = response.data;
+                console.log(data)
+                setPost(new CodingRoom(data))
+            }).catch(function (error) {
+            alert("Fail To fetch CodingRoom!");
+        });
+    }
+
 
     React.useEffect(() => {
         if (navigator.platform.indexOf("Win") > -1) {
@@ -52,6 +76,7 @@ export default function MainBoardPage() {
             let tables = document.querySelectorAll(".table-responsive");
         }
         document.body.classList.toggle("mainboard-page");
+        fetchCodingRooms();
         // Specify how to clean up after this effect:
         return function cleanup() {
             if (navigator.platform.indexOf("Win") > -1) {

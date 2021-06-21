@@ -56,6 +56,9 @@ export default function CodeBoardPostPage(props) {
   const [codingTestUrl, setCodingTestUrl] = React.useState("");
   const [codingContents, setCodingContents] = React.useState("");
 
+
+
+
   const fetchPostInfo = (postId) => {
     setPostId(postId);
     setCodingTestUrl("/create/codingTest/"+postId);
