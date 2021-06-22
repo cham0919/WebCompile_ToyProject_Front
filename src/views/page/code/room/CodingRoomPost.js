@@ -108,7 +108,7 @@ export default function CodingRoomPost(props) {
               <td>0%</td>
               <td>
                 <Button className="btn-icon" color="info" size="sm"
-                        to={"/wcp/ide/" + content.key} tag={Link}>
+                        to={"/wcp/ide/" + postId + "/" + content.key} tag={Link}>
                   <i className="tim-icons icon-pencil"></i>
                 </Button>
               </td>
