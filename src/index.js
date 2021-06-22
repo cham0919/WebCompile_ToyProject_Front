@@ -75,7 +75,7 @@ ReactDOM.render(
           render={(props) => <CreateCodingTestPage {...props} />}
       />
       <Route
-          path="/wcp/ide/:testId"
+          path="/wcp/ide/:postId/:testId"
           render={(props) => <WebCompiler {...props} />}
       />
       <Redirect from="/" to="/components" />

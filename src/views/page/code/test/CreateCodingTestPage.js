@@ -110,11 +110,29 @@ export default function CreateCodingTestPage(props) {
     let content = document.getElementById("content").value;
     let languages = document.getElementsByName("language");
     let language = [];
+
+    //검증
+    if(title.trim() == ""){
+      alert("문제 제목을 입력해주세요");
+      return;
+    }
+    if(content.trim() == ""){
+      alert("내용을 입력해주세요");
+      return;
+    }
+    if(languages.length == 0){
+      alert("언어를 선택해주세요");
+      return;
+    }
+
+    
     for (let i = 0; i < languages.length; i++){
       if(languages[i].checked){
         language.push(languages[i].value);
       }
     }
+
+
     language = JSON.stringify(language);
     // checkFile
     let checkFile = document.getElementById("file").files[0];

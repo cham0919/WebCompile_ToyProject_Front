@@ -76,6 +76,17 @@ export default function InsertCodeBoardPage() {
     let title = document.getElementById("title").value;
     let intro = document.getElementById("intro").value;
     let password = document.getElementById("password").value.trim();
+
+
+    if(title.trim() == ""){
+      alert("제목을 입력해주세요");
+      return;
+    }
+    if(intro.trim() == ""){
+      alert("소개를 입력해주세요");
+      return;
+    }
+
     let data
     if (password == "") {
       data = {title, intro, maxUser}
