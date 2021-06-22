@@ -206,10 +206,18 @@ function handleResult(data, number, size) {
         result = "테스트 "+ number + " : 실패\n";
     }
 
-    stdoutEditor.setValue(stdoutEditor.getValue() + result);
+    let text = stdoutEditor.getValue();
+    stdoutEditor.setValue(text + result);
 
-    if(stdoutEditor.getValue().length == size*11){
-        let status = stdoutEditor.getValue().includes("실패") ? 1 : 0;
+    let idx = text.indexOf("\n");
+    let count = 1;
+    while (idx !== -1) {
+        count++;
+        idx = text.indexOf("\n", idx + 1); // 첫 번째 a 이후의 인덱스부터 a를 찾습니다.
+    }
+
+    if(count == size){
+        let status = text.includes("실패") ? 1 : 0;
         registerSubmit(status);
     }
     $runBtn.removeClass("loading");
@@ -300,7 +308,8 @@ function run() {
         timeStart = performance.now();
         $.ajax({
             // url: apiUrl + `/submissions?base64_encoded=true&wait=${wait}`,
-            url: localUrl + `/wcp/coding/submit/` + postId,
+            // url: localUrl + `/wcp/coding/submit/` + postId,
+            url: localUrl + `/wcp/coding/api/` + postId,
             type: "POST",
             async: true,
             contentType: "application/json",
@@ -309,19 +318,19 @@ function run() {
                 withCredentials: apiUrl.indexOf("/secure") != -1 ? true : false
             },
             success: function (data, textStatus, jqXHR) {
-                console.log(`Your submission token is: `);
+                console.log(`Your submission token is: 됨????`);
                 console.log(data);
                 if (wait == true) {
                     handleResult(data);
                 } else {
                     for(let i = 0; i < data.length; i++){
-                        let singleStatus = fetchSubmission(data[i].token, i+1, data.length);
+                        fetchSubmission(data[i].token, i+1, data.length);
                         // setTimeout(fetchSubmission.bind(null, data[i].token, i+1), check_timeout);
                     }
 
                 }
             },
-            error: handleRunError
+            error: handleRunError,
         });
     }
 
@@ -368,7 +377,7 @@ function registerSubmit(status){
     };
 
     $.ajax({
-        url: localUrl + "/wcp/coding/submit/final/" + postId,
+        url: localUrl + "/wcp/coding/submit/" + postId,
         type: "POST",
         async: true,
         contentType: "application/json",
@@ -376,7 +385,6 @@ function registerSubmit(status){
         success: function (data) {
             if(status == 0){
                 alert("테스트 성공");
-                window.location.href = "/coding/room/post/" + data;
             }else{
                 alert("테스트 실패");
             }
@@ -521,6 +529,7 @@ $(document).ready(function () {
     $runBtn.click(function (e) {
         run();
     });
+
 
     $navigationMessage = $("#navigation-message span");
     $updates = $("#judge0-more");
@@ -714,7 +723,7 @@ $(document).ready(function () {
             if (getIdFromURI()) {
                 loadSavedSource();
             } else {
-                loadRandomLanguage();
+                // loadRandomLanguage();
             }
             $("#site-navigation").css("border-bottom", "1px solid black");
             sourceEditor.focus();
