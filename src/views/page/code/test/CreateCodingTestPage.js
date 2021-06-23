@@ -112,20 +112,20 @@ export default function CreateCodingTestPage(props) {
     let language = [];
 
     //검증
-    if(title.trim() == ""){
+    if(title.trim() === ""){
       alert("문제 제목을 입력해주세요");
       return;
     }
-    if(content.trim() == ""){
+    if(content.trim() === ""){
       alert("내용을 입력해주세요");
       return;
     }
-    if(languages.length == 0){
+    if(languages.length === 0){
       alert("언어를 선택해주세요");
       return;
     }
 
-    
+
     for (let i = 0; i < languages.length; i++){
       if(languages[i].checked){
         language.push(languages[i].value);
