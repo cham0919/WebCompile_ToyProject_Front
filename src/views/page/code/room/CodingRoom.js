@@ -24,6 +24,7 @@ import {Button, Table,} from "reactstrap";
 import {Link} from "react-router-dom";
 import Axios from "axios";
 import storage from "../../../../lib/storage";
+import {useHistory} from "react-router";
 
 const carouselItems = [
     {
@@ -56,27 +57,44 @@ class CodingRoomInfo {
 
 export default function CodingRoom() {
     const [tabs, setTabs] = React.useState(1);
+    const [startPage, setStartPage] = React.useState(1);
+    const [endPage, setEndPage] = React.useState(10);
     const [codingRoomInfoList, setCodingRoomInfoList] = React.useState([]);
 
-    const fetchCodingRooms = () => {
-        const url = "/wcp/coding/room";
+    const history = useHistory();
+
+    const fetchCodingRoomPaging = (page) => {
+        console.log("이게 세번?")
+        const url = "/wcp/coding/room/page/"+page;
         Axios.get(url)
             .then(function (response) {
-                //글 등록
+                console.log(response)
                 const datas = response.data;
                 let codingRoomInfoList = [];
-                console.log(response.data)
-                for (const data of datas) {
-                    codingRoomInfoList.push(new CodingRoomInfo(data));
-                }
-                setCodingRoomInfoList(codingRoomInfoList)
+                setStartPage(datas.startPage);
+                setEndPage(datas.endPage);
+
+                // for (const data of datas) {
+                //     codingRoomInfoList.push(new CodingRoomInfo(data));
+                // }
+                // setCodingRoomInfoList(codingRoomInfoList)
             }).catch(function (error) {
-            console.log(error)
-            alert("Fail To fetch CodingRoom!");
+            switch (error.response.status) {
+                case 401:
+                    history.push({
+                        pathname: "/login"
+                    });
+                case 403:
+                    history.push({
+                        pathname: "/login"
+                    });
+                default:
+                    alert("Fail To fetch CodingRoom!");
+            }
         });
     }
 
-    const getPosts = () => {
+    const getPosts = (page) => {
         const postInfo = [];
         if (codingRoomInfoList.length == 0) {
             postInfo.push(
@@ -129,8 +147,8 @@ export default function CodingRoom() {
             let tables = document.querySelectorAll(".table-responsive");
         }
         document.body.classList.toggle("/coding/room");
-        // init
-        fetchCodingRooms();
+        //init
+        fetchCodingRoomPaging(1)
 
 
         // Specify how to clean up after this effect:
@@ -154,7 +172,7 @@ export default function CodingRoom() {
                 </tr>
                 </thead>
                 <tbody>
-                {getPosts()}
+                {getPosts(1)}
                 {getCreateButton()}
                 </tbody>
             </Table>

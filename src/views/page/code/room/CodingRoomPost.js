@@ -24,7 +24,7 @@ import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Axios from "axios";
-import {useLocation} from "react-router";
+import {useHistory, useLocation} from "react-router";
 import {Link} from "react-router-dom";
 
 const carouselItems = [
@@ -56,7 +56,7 @@ export default function CodingRoomPost(props) {
   const [postId, setPostId] = React.useState("");
   const [codingTestUrl, setCodingTestUrl] = React.useState("");
   const [codingContents, setCodingContents] = React.useState("");
-
+  const history = useHistory();
 
 
 
@@ -76,7 +76,18 @@ export default function CodingRoomPost(props) {
           setPassword(data.password);
           setCodingContents(data.codingTests);
         }).catch(function (error) {
-      alert("Fail To fetch PostInfo!");
+      switch (error.response.status) {
+        case 401:
+          history.push({
+            pathname: "/login"
+          });
+        case 403:
+          history.push({
+            pathname: "/login"
+          });
+        default:
+          alert("Fail To fetch CodingRoom!");
+      }
     });
   }
 
