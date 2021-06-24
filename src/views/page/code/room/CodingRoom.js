@@ -19,6 +19,7 @@ import React from "react";
 // javascript plugin used to create scrollbars on windows
 // reactstrap components
 import {Button, Table,} from "reactstrap";
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 // core components
 import {Link} from "react-router-dom";
@@ -55,46 +56,19 @@ class CodingRoomInfo {
 }
 
 
-export default function CodingRoom() {
+
+
+export default function CodingRoom(props) {
     const [tabs, setTabs] = React.useState(1);
     const [startPage, setStartPage] = React.useState(1);
-    const [endPage, setEndPage] = React.useState(10);
+    const [endPage, setEndPage] = React.useState(1);
     const [codingRoomInfoList, setCodingRoomInfoList] = React.useState([]);
+    const [currentPage, setCurrentPage] = React.useState(1);
+    const [totalEndPage, setTotalEndPage] = React.useState(1);
 
     const history = useHistory();
 
-    const fetchCodingRoomPaging = (page) => {
-        console.log("이게 세번?")
-        const url = "/wcp/coding/room/page/"+page;
-        Axios.get(url)
-            .then(function (response) {
-                console.log(response)
-                const datas = response.data;
-                let codingRoomInfoList = [];
-                setStartPage(datas.startPage);
-                setEndPage(datas.endPage);
-
-                // for (const data of datas) {
-                //     codingRoomInfoList.push(new CodingRoomInfo(data));
-                // }
-                // setCodingRoomInfoList(codingRoomInfoList)
-            }).catch(function (error) {
-            switch (error.response.status) {
-                case 401:
-                    history.push({
-                        pathname: "/login"
-                    });
-                case 403:
-                    history.push({
-                        pathname: "/login"
-                    });
-                default:
-                    alert("Fail To fetch CodingRoom!");
-            }
-        });
-    }
-
-    const getPosts = (page) => {
+    const renderOnePagePost = () => {
         const postInfo = [];
         if (codingRoomInfoList.length == 0) {
             postInfo.push(
@@ -110,8 +84,8 @@ export default function CodingRoom() {
                     <tr>
                         <td className="text-center">{codingRoomInfo.key}</td>
                         <td className="text-center"><a href={"/coding/room/post/" + codingRoomInfo.key}>{codingRoomInfo.title}</a></td>
-                        <td className="text-right">{codingRoomInfo.joinUser} / {codingRoomInfo.maxUser}</td>
-                        <td className="text-center">{codingRoomInfo.testCount}</td>
+                        <td className="text-right">{codingRoomInfo.joinUsersCount} / {codingRoomInfo.maxUser}</td>
+                        <td className="text-center">{codingRoomInfo.codingTestCount}</td>
                     </tr>
                 );
             }
@@ -119,26 +93,113 @@ export default function CodingRoom() {
         return postInfo;
     }
 
+    const getPosts = (page = 1) => {
+        const url = `/wcp/coding/room/page/${page}`;
+        Axios.get(url)
+            .then(function (response) {
+                const dataList = response.data;
+                console.log(dataList)
+                setStartPage(dataList.startPage);
+                setEndPage(dataList.endPage);
+                setTotalEndPage(dataList.totalEndPage);
+                setCodingRoomInfoList(dataList.post);
+            }).catch(function (error) {
+            if(!error.response) {
+                alert("Fail To fetch CodingRoom!");
+            }else {
+                switch (error.response.status) {
+                    case 401:
+                        history.push({
+                            pathname: "/login"
+                        });
+                    case 403:
+                        history.push({
+                            pathname: "/login"
+                        });
+                    default:
+                        alert("Fail To fetch CodingRoom!");
+                }
+            }
+        });
+    }
+
     const getCreateButton = () => {
         const result = []
         const userInfo = storage.get("userInfo")
         if (userInfo != null && userInfo.role == "MEMBER") {
             result.push(
-                <tr>
-                    <td></td><td></td><td></td>
-                    <td className="text-right">
+                // <Pagination listClassName="justify-content-end">
+                <div style={{textAlign: 'right'}}>
                         <Button className="btn-round"
                                 color="primary"
                                 type="button"
                                 to="/coding/room/insert" tag={Link}>
                             방 개설
                         </Button>
-                    </td>
-                </tr>
+                </div>
+                // </Pagination>
             );
         }
         return result
     }
+
+    const renderingPagination = () => {
+        let result = [];
+
+        result.push(
+            <Pagination listClassName="justify-content-center">
+                <PaginationItem>
+                    <PaginationLink onClick={() => {
+                        if (startPage == 1) {
+                            alert("이전 페이지가 없습니다")
+                        } else {
+                            setCurrentPage(startPage - 1)
+                        }
+                    }}>
+                        Previous
+                    </PaginationLink>
+                </PaginationItem>
+                {renderingPaginationNumber()}
+                <PaginationItem>
+                    <PaginationLink onClick={() => {
+                        if (endPage == totalEndPage) {
+                            alert("다음 페이지가 없습니다")
+                        } else {
+                            setCurrentPage(endPage+1)
+                        }
+                    }}>
+                        Next
+                    </PaginationLink>
+                </PaginationItem>
+            </Pagination>
+        )
+
+        return result;
+    }
+
+    const renderingPaginationNumber = () => {
+        let result = []
+        for (let i = startPage; i <= endPage; i++) {
+            result.push(
+                <PaginationItem>
+                    <PaginationLink onClick={() => setCurrentPage(i)}>
+                        {i}
+                    </PaginationLink>
+                </PaginationItem>
+            );
+        }
+
+        return result;
+    }
+
+    React.useEffect(() => {
+        console.log(currentPage)
+        if (currentPage) {
+            getPosts(currentPage);
+        } else {
+            getPosts();
+        }
+    }, [currentPage]);
 
     React.useEffect(() => {
         if (navigator.platform.indexOf("Win") > -1) {
@@ -148,7 +209,6 @@ export default function CodingRoom() {
         }
         document.body.classList.toggle("/coding/room");
         //init
-        fetchCodingRoomPaging(1)
 
 
         // Specify how to clean up after this effect:
@@ -172,10 +232,11 @@ export default function CodingRoom() {
                 </tr>
                 </thead>
                 <tbody>
-                {getPosts(1)}
-                {getCreateButton()}
+                {renderOnePagePost()}
                 </tbody>
             </Table>
+            {renderingPagination()}
+            {getCreateButton()}
         </>
     );
 }

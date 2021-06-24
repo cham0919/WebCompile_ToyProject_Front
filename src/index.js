@@ -54,7 +54,7 @@ ReactDOM.render(
           render={(props) => <CodingRoomPost {...props} />}
       />
       <Route
-          path="/coding/room"
+          path="/coding/room/:page"
           render={(props) => <CodingRoom {...props} />}
       />
       <Route
