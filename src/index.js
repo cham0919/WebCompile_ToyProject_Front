@@ -26,13 +26,14 @@ import "assets/demo/demo.css";
 
 import Index from "views/Index.js";
 import LandingPage from "views/page/LandingPage.js";
-import RegisterPage from "views/page/RegisterPage.js";
+import SignIn from "views/page/auth/SignIn.js";
 import ProfilePage from "views/page/ProfilePage.js";
-import SignUpPage from "./views/page/SignUpPage";
+import SignUp from "./views/page/auth/SignUp";
 import InsertCodeBoardPage from "./views/page/InsertCodeBoardPage";
-import CodeBoardPostPage from "./views/page/CodeBoardPostPage";
-import CreateCodingTestPage from "./views/page/codingBoard/CreateCodingTestPage";
+import CodingRoomPost from "./views/page/code/room/CodingRoomPost";
+import CreateCodingTestPage from "./views/page/code/test/CreateCodingTestPage";
 import WebCompiler from "./views/ide/WebCompiler";
+import CodingRoom from "./views/page/code/room/CodingRoom";
 
 
 
@@ -45,35 +46,36 @@ ReactDOM.render(
         render={(props) => <LandingPage {...props} />}
       />
       <Route
-          path="/mainboard-page"
-          render={(props) => <RegisterPage {...props} />}
+          path="/coding/room/insert"
+          render={(props) => <InsertCodeBoardPage {...props} />}
       />
       <Route
-        path="/register-page"
-        render={(props) => <RegisterPage {...props} />}
+          path="/coding/room/post/:postId"
+          render={(props) => <CodingRoomPost {...props} />}
+      />
+      <Route
+          path="/coding/room/:page"
+          render={(props) => <CodingRoom {...props} />}
+      />
+      <Route
+        path="/login"
+        render={(props) => <SignIn {...props} />}
       />
       <Route
         path="/profile-page"
         render={(props) => <ProfilePage {...props} />}
       />
       <Route
-          path="/signUp-page"
-          render={(props) => <SignUpPage {...props} />}
+          path="/signUp"
+          render={(props) => <SignUp {...props} />}
       />
+
       <Route
-          path="/insert-codeBoard-page"
-          render={(props) => <InsertCodeBoardPage {...props} />}
-      />
-      <Route
-          path="/codeBoard-post-page/:postId"
-          render={(props) => <CodeBoardPostPage {...props} />}
-      />
-      <Route
-          path="/create/codingTest/:postId"
+          path="/coding/test/insert/:postId"
           render={(props) => <CreateCodingTestPage {...props} />}
       />
       <Route
-          path="/wcp/ide/:testId"
+          path="/wcp/ide/:postId/:testId"
           render={(props) => <WebCompiler {...props} />}
       />
       <Redirect from="/" to="/components" />

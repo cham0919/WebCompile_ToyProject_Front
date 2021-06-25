@@ -16,38 +16,29 @@
 
 */
 import React from "react";
-import classnames from "classnames";
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
 // reactstrap components
 import {
   Button,
   Card,
-  CardHeader,
   CardBody,
-  Label,
-  FormGroup,
-  Form,
-  Input,
-  FormText,
-  NavItem,
-  NavLink,
-  Nav,
-  Table,
-  TabContent,
-  TabPane,
-  Container,
-  Row,
+  CardHeader,
   Col,
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  Row,
   UncontrolledTooltip,
-  UncontrolledCarousel,
 } from "reactstrap";
+import $ from "jquery";
 
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
 import Axios from "axios";
 import {useHistory} from "react-router";
+import IndexNavbar from "../../../components/Navbars/IndexNavbar";
 
 const carouselItems = [
   {
@@ -68,15 +59,37 @@ const carouselItems = [
 ];
 
 
-export default function SignUpPage() {
+export default function SignUp() {
   const [tabs, setTabs] = React.useState(1);
   const history = useHistory();
+
   const signUp = () => {
-    const url = "/wcp/user/signUp"
+    const url = "/wcp/signUp"
     let name = document.getElementById("name").value
     let email = document.getElementById("email").value
     let phone = document.getElementById("phone").value
     let password = document.getElementById("password").value
+
+    if(name.trim() == ""){
+      alert("아이디를 입력해주세요");
+      return;
+    }
+    if(password.trim() == ""){
+      alert("비밀번호를 입력해주세요");
+      return;
+    }
+
+    if(!isEmail(email)){
+      alert("이메일을 확인해주세요");
+      return;
+    }
+
+    if(!isMobile(phone)){
+      alert("핸드폰 번호를 확인해주세요");
+      return;
+    }
+
+
 
     let data = {
       "name": name,
@@ -87,13 +100,31 @@ export default function SignUpPage() {
     Axios.post(url, data)
         .then(function (response) {
           alert("Success To SignUp!");
-          history.push("/register-page");
-          // window.location.href = "/register-page";
+          history.push("/login");
         }).catch(function (error) {
       alert("Fail To SingUp!")
     }).then(function() {
       // 항상 실행
     });
+  }
+
+
+  const isMobile = (phoneNum) => {
+    var regExp =/(01[016789])([1-9]{1}[0-9]{2,3})([0-9]{4})$/;
+    if(regExp.test(phoneNum)){
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const isEmail = (email) => {
+    var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    if(regExp.test(email)){
+      return true;
+    } else {
+      return false;
+    }
   }
 
   React.useEffect(() => {
@@ -102,19 +133,19 @@ export default function SignUpPage() {
       document.documentElement.classList.remove("perfect-scrollbar-off");
       let tables = document.querySelectorAll(".table-responsive");
     }
-    document.body.classList.toggle("signUp-page");
+    document.body.classList.toggle("signUp");
     // Specify how to clean up after this effect:
     return function cleanup() {
       if (navigator.platform.indexOf("Win") > -1) {
         document.documentElement.className += " perfect-scrollbar-off";
         document.documentElement.classList.remove("perfect-scrollbar-on");
       }
-      document.body.classList.toggle("signUp-page");
+      document.body.classList.toggle("signUp");
     };
   },[]);
   return (
     <>
-      <ExamplesNavbar />
+      <IndexNavbar />
       <div className="wrapper">
         <section className="section">
           <Container>

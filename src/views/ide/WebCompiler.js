@@ -19,9 +19,10 @@ import React from "react";
 // javascript plugin used to create scrollbars on windows
 // reactstrap components
 // core components
-import {useLocation} from "react-router";
+import {useHistory, useLocation} from "react-router";
 import {Helmet} from "react-helmet";
 import Axios from "axios";
+import IndexNavbar from "../../components/Navbars/IndexNavbar";
 
 const carouselItems = [
   {
@@ -47,9 +48,11 @@ export default function WebCompiler(props) {
   const itemStyle2 = "background-color: #1da1f2 !important; color: white !important";
   const itemStyle3 = "background-color: #1877f2 !important; color: white !important";
   const [testId, setTestId] = React.useState("");
+  const [postId, setpostId] = React.useState("");
   const [title, setTitle] = React.useState("");
   const [content, setContent] = React.useState("");
   const [language, setLanguage] = React.useState("");
+  const history = useHistory();
 
     const languageList = ["C", "C++", "Clojure", "C#", "Go", "Java", "JavaScript", "Kotlin", "Python", "R", "Ruby",
         "Rust", "Scala", "SQL", "Swift", "TypeScript"];
@@ -91,6 +94,12 @@ export default function WebCompiler(props) {
       });
   }
 
+  const back = () => {
+    history.push({
+      pathname: "/coding/room/post/"+postId
+    });
+  }
+
   const renderingLanguage = () => {
       let array = language.replaceAll("\"","").slice(1, -1).split(/,\s?/);
       const result = [];
@@ -113,6 +122,7 @@ export default function WebCompiler(props) {
       let tables = document.querySelectorAll(".table-responsive");
     }
     document.body.classList.toggle("wcp/ide");
+    setpostId(props.match.params.postId)
     fetchTestInfo(props.match.params.testId);
 
     // Specify how to clean up after this effect:
@@ -129,30 +139,15 @@ export default function WebCompiler(props) {
     <Helmet>
         <script type="text/javascript" src="/assets/js/ide.js"></script>
     </Helmet>
-      {/*<ExamplesNavbar />*/}
       <div id="site-navigation" className="ui small inverted menu">
         <div id="site-header" className="header item">
           <a href="/">
-            <img id="site-icon"  src="../../assets/img/judge0_icon.png"/>
               <h2>WCP</h2>
           </a>
         </div>
 
         <div className="left menu">
-          <div className="ui dropdown item site-links on-hover">
-            File <i className="dropdown icon"></i>
-            <div className="menu">
-              <a className="item" target="_blank" href="/"><i className="file code icon"></i> New File</a>
-              {/*<div className="item" onClick="downloadSource()"><i className="download icon"></i> Download</div>*/}
-              <div className="item" ><i className="download icon"></i> Download</div>
-              <div className="item" ><i className="download icon"></i> Download</div>
-              <div id="insert-template-btn" className="item"><i className="file code outline icon"></i> Insert template
-                for current language
-              </div>
-            </div>
-          </div>
-         {/*<div className="link item" onClick="$('#site-settings').modal('show')"><i className="cog icon"></i> Settings*/}
-         <div className="link item" ><i className="cog icon"></i> Settings </div>
+         <div className="link item" onClick={back} >돌아가기</div>
             <div className="item borderless">
                 <select id="select-language" className="ui dropdown">
                     {renderingLanguage()}
@@ -160,82 +155,23 @@ export default function WebCompiler(props) {
             </div>
            <div className="item fitted borderless wide screen only">
              <div className="ui input">
-               <input id="compiler-options" type="text" placeholder="Compiler options"></input>
+               <input id="compiler-options" type="hidden" placeholder="Compiler options"></input>
              </div>
            </div>
            <div className="item borderless wide screen only">
              <div className="ui input">
-               <input id="command-line-arguments" type="text" placeholder="Command line arguments"></input>
+               <input id="command-line-arguments" type="hidden" placeholder="Command line arguments"></input>
              </div>
            </div>
            <div className="item no-left-padding borderless">
              <button id="run-btn" className="ui primary labeled icon button"><i className="play icon"></i>Run (F9)
              </button>
            </div>
-           <div id="navigation-message" className="item borderless">
-             <span className="navigation-message-text"></span>
-           </div>
         </div>
-        <div className="right menu">
-          <div id="judge0-more" className="ui dropdown item site-links">
-            More
-            <i className="dropdown icon"/>
-            <div className="menu">
-                <a id="about" className="link item" target="_blank" href="https://judge0.com/ce">
-                  <i className="server icon"/> API</a>
-                <div className="divider"/>
-                <a className="item" target="_blank" href="https://www.patreon.com/hermanzdosilovic">
-                  <i className="patreon icon"/>
-                  Become a Patron</a>
-                <a className="item" target="_blank" href="https://paypal.me/hermanzdosilovic">
-                  <i className="paypal icon"/>
-                  Donate with PayPal</a>
-                <div className="divider"/>
-                <a className="item" target="_blank" href="https://github.com/judge0/ide">
-                  <i className="github icon"/>
-                  View source
-                  code on Github</a>
-                <a className="item" target="_blank" href="https://github.com/judge0/ide/issues/new">
-                  <i className="exclamation circle icon"/> Report an issue</a>
-                <div className="divider"/>
-                <a className="item" target="_blank" href="https://subscribe.judge0.com">
-                  <i className="envelope icon"/>
-                  Subscribe
-                  to Judge0 newsletter</a>
-                <a className="item" target="_blank" href="https://discord.gg/GRc3v6n">
-                  <i className="discord icon"/> Join a Discord server</a>
-                <div className="divider"/>
-                <a className="item" target="_blank" href="mailto:hermanz.dosilovic@gmail.com">
-                  <i className="paper plane icon"/>
-                  Contact the author</a>
-                <a className="item" target="_blank" href="https://hermanz.dosilovic.com">
-                  <i className="user icon"/> About
-                  the
-                  author</a>
-                <div className="divider"/>
-                <a className="item" target="_blank"
-                   href="https://www.reddit.com/submit?url=https%3A%2F%2Fide.judge0.com&title=Judge0%20IDE"
-                    // style="background-color: #ff4500 !important; color: white !important;"><i
-                   style={{itemStyle1}}>
-                  <i className="reddit icon"/> Share
-                  on Reddit</a>
-                <a className="item" target="_blank"
-                   href="https://twitter.com/intent/tweet?text=Judge0%20IDE&url=https%3A%2F%2Fide.judge0.com&via=hermanzvonimir"
-                    // style="background-color: #1da1f2 !important; color: white !important;"><i
-                   style={{itemStyle2}}><i className="twitter icon"/>
-                  Share on Twitter</a>
-                <a className="item" target="_blank"
-                   href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fide.judge0.com"
-                    // style="background-color: #1877f2 !important; color: white !important;"><i
-                   style={{itemStyle3}}><i className="facebook icon"/>
-                  Share on Facebook</a>
-              </div>
-            </div>
-          </div>
       </div>
 
       <div id="site-content"></div>
-        <input id="content" value={content} readOnly/>
+        <input type="hidden" id="content" value={content} readOnly/>
 
       <div id="site-modal" className="ui modal">
         <div className="header">

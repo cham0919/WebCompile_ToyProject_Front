@@ -37,6 +37,7 @@ import {
   UncontrolledTooltip,
 } from "reactstrap";
 import {useHistory} from "react-router";
+import storage from "../../lib/storage";
 
 export default function IndexNavbar() {
   const history = useHistory();
@@ -45,15 +46,18 @@ export default function IndexNavbar() {
   const [color, setColor] = React.useState("navbar-transparent");
   const [isLogin, setIsLogin] = React.useState(false);
   const [userName, setuserName] = React.useState("");
-  React.useEffect(() => {
+  React.useEffect(() => { getUrlFromSignInCheck()
     window.addEventListener("scroll", changeColor);
 
     //login check
-    Axios.get("/wcp/user/check")
-        .then(function (response) {
+    Axios.get("/wcp/auth/check")
+        .then(function (data) {
           // response
-          setIsLogin(true)
-          setuserName(response.data)
+          setIsLogin(data.data.result)
+          if (!data.data.result) {
+            storage.remove("userInfo")
+          }
+          // alert(isLogin)
         }).catch(function (error) {
       // 오류발생시 실행
       setIsLogin(false)
@@ -68,9 +72,12 @@ export default function IndexNavbar() {
   },[]);
 
 
+  const getIsLogin = () => {
+    return isLogin;
+  }
 
   const getUrlFromSignInCheck = () => {
-    return isLogin ? "/userHome-page" : "/register-page";
+    return isLogin ? "/userHome-page" : "/login";
   }
 
   function showLogout(){
@@ -84,6 +91,19 @@ export default function IndexNavbar() {
         </Button>
     );
   }
+
+  function checkLogin(){
+    if (isLogin) {
+      return (
+          <i className="tim-icons icon-single-02" />
+      );
+    } else {
+      return (
+          "SignIn"
+      );
+    }
+  }
+
 
 
   const changeColor = () => {
@@ -115,10 +135,11 @@ export default function IndexNavbar() {
       .scrollIntoView({ behavior: "smooth" });
   };
   const Logout = () => {
-    Axios.get("/wcp/logout")
+    Axios.get("/wcp/auth/logout")
         .then(function (response) {
           // response
-          console.log(response)
+          setIsLogin(false)
+          storage.remove("userInfo")
           history.push("/components");
           // window.location.href="/components";
         }).catch(function (error) {
@@ -239,7 +260,7 @@ export default function IndexNavbar() {
                   <i className="tim-icons icon-paper" />
                   Documentation
                 </DropdownItem>
-                <DropdownItem tag={Link} to="/register-page">
+                <DropdownItem tag={Link} to="/login">
                   <i className="tim-icons icon-bullet-list-67" />
                   Register Page
                 </DropdownItem>
@@ -278,20 +299,9 @@ export default function IndexNavbar() {
                 color="default"
                 tag={Link} to={getUrlFromSignInCheck}
               >
-                <i className="tim-icons icon-single-02" /> {userName}
+                {checkLogin()}
               </Button>
             </NavItem>
-{/*
-            <NavItem>
-              <Button
-                className="nav-link d-none d-lg-block"
-                color="default"
-                tag={Link} to="/register-page"
-              >
-                <i className="tim-icons icon-single-02" /> SignIn
-              </Button>
-            </NavItem>
-*/}
           </Nav>
         </Collapse>
       </Container>
