@@ -26,6 +26,7 @@ import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Axios from "axios";
 import {useHistory, useLocation} from "react-router";
 import {Link} from "react-router-dom";
+import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 const carouselItems = [
   {
@@ -46,54 +47,115 @@ const carouselItems = [
 ];
 
 
+
+class CodingRoomInfo {
+  constructor(data) {
+    this.key = data.key;
+    this.title = data.title;
+    this.maxUser = data.maxUser;
+    this.secret = data.secret;
+    this.joinUsersCount = data.joinUsersCount;
+    this.codingTestCount = data.codingTestCount;
+  }
+}
+
+class CodingTestInfo {
+  constructor(data) {
+    this.key = data.key;
+    this.language = data.language;
+    this.postId = data.postId;
+    this.title = data.title;
+    this.userKey = data.userKey;
+    this.isPass = data.isPass;
+  }
+}
+
+
 export default function CodingRoomPost(props) {
   const location = useLocation();
-  const [title, setTitle] = React.useState("");
-  const [intro, setIntro] = React.useState("");
-  const [maxUser, setMaxUser] = React.useState(0);
-  const [currentUser, setCurrentUser] = React.useState(0);
-  const [password, setPassword] = React.useState("");
-  const [postId, setPostId] = React.useState("");
+  const [postId, setPostId] = React.useState();
   const [codingTestUrl, setCodingTestUrl] = React.useState("");
-  const [codingContents, setCodingContents] = React.useState("");
+  const [codingRoomInfo, setCodingRoomInfo] = React.useState("");
+  const [codingTestList, setCodingTestList] = React.useState([]);
+
+
+  //page
+  const [startPage, setStartPage] = React.useState(1);
+  const [endPage, setEndPage] = React.useState(1);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [totalEndPage, setTotalEndPage] = React.useState(1);
+
   const history = useHistory();
 
 
 
-  const fetchPostInfo = (postId) => {
-    setPostId(postId);
-    setCodingTestUrl("/coding/test/insert/"+postId);
-    const url = "/wcp/coding/room/"+postId;
+  const fetchCodingRoomPostInfo = (postId) => {
+    const url = `/wcp/coding/room/${postId}`;
+    console.log(url)
     Axios.get(url)
         .then(function (response) {
           //글 등록
           const data = response.data;
-          console.log(response)
-          setTitle(data.title);
-          setIntro(data.intro);
-          setMaxUser(data.maxUser);
-          setCurrentUser(data.codingJoinUsers.length);
-          setPassword(data.password);
-          setCodingContents(data.codingTests);
+          setCodingRoomInfo(new CodingRoomInfo(data));
         }).catch(function (error) {
-      switch (error.response.status) {
-        case 401:
-          history.push({
-            pathname: "/login"
-          });
-        case 403:
-          history.push({
-            pathname: "/login"
-          });
-        default:
-          alert("Fail To fetch CodingRoom!");
+          if(error.response) {
+            switch (error.response.status) {
+              case 401:
+                history.push({
+                  pathname: "/login"
+                });
+              case 403:
+                history.push({
+                  pathname: "/login"
+                });
+              default:
+                alert("Fail To fetch CodingRoom!");
+            }
+          } else {
+            alert("Fail To fetch CodingRoom!");
+          }
+
+    });
+  }
+
+  const fetchCodingTestInfoByRoomId = (roomId, page = 1) => {
+    const url = `/wcp/coding/room/${roomId}/test`;
+    console.log(url)
+    Axios.get(url, {
+      params: {'pageNm': page}
+    })
+        .then(function (response) {
+          //글 등록
+          const dataList = response.data;
+          setStartPage(dataList.startPage);
+          setEndPage(dataList.endPage);
+          setTotalEndPage(dataList.totalEndPage);
+          setCodingTestList(dataList.post);
+        }).catch(function (error) {
+      if(error.response) {
+        switch (error.response.status) {
+          case 401:
+            history.push({
+              pathname: "/login"
+            });
+          case 403:
+            history.push({
+              pathname: "/login"
+            });
+          default:
+            alert("Fail To fetch CodingRoom!");
+        }
+      } else {
+        alert("Fail To fetch CodingRoom!");
       }
+
     });
   }
 
   const checkSecretPost = () => {
     const result = [];
-    if(password && password.trim() != ""){
+    console.log(codingRoomInfo)
+    if(codingRoomInfo.secret){
       result.push(
           <i className="tim-icons icon-lock-circle"/>
       );
@@ -101,9 +163,9 @@ export default function CodingRoomPost(props) {
     return result;
   }
 
-  const getContents = () => {
+  const renderingCodingTests = () => {
     const result = [];
-    if(codingContents.length == 0){
+    if(codingTestList.length == 0){
       result.push(
           <tr>
             <td className="text-center"></td>
@@ -111,15 +173,15 @@ export default function CodingRoomPost(props) {
           </tr>
       );
     }else{
-      for (const content of codingContents) {
+      for (const codingTestInfo of codingTestList) {
         result.push(
             <tr>
-              <td className="text-center">{content.key}</td>
-              <td>{content.title}</td>
-              <td>0%</td>
+              <td className="text-center">{codingTestInfo.key}</td>
+              <td>{codingTestInfo.title}</td>
+              <td>{codingTestInfo.isPass ? "Pass" : ""}</td>
               <td>
                 <Button className="btn-icon" color="info" size="sm"
-                        to={"/wcp/ide/" + postId + "/" + content.key} tag={Link}>
+                        to={`/wcp/ide/${postId}/${codingTestInfo.key}`} tag={Link}>
                   <i className="tim-icons icon-pencil"></i>
                 </Button>
               </td>
@@ -131,6 +193,68 @@ export default function CodingRoomPost(props) {
     return result;
   }
 
+  const renderingPagination = () => {
+    let result = [];
+
+    result.push(
+        <Pagination listClassName="justify-content-center">
+          <PaginationItem>
+            <PaginationLink onClick={() => {
+              if (startPage == 1) {
+                alert("이전 페이지가 없습니다")
+              } else {
+                setCurrentPage(startPage - 1)
+              }
+            }}>
+              Previous
+            </PaginationLink>
+          </PaginationItem>
+          {renderingPaginationNumber()}
+          <PaginationItem>
+            <PaginationLink onClick={() => {
+              if (endPage == totalEndPage) {
+                alert("다음 페이지가 없습니다")
+              } else {
+                setCurrentPage(endPage+1)
+              }
+            }}>
+              Next
+            </PaginationLink>
+          </PaginationItem>
+        </Pagination>
+    )
+    return result;
+  }
+
+  const renderingPaginationNumber = () => {
+    let result = []
+    for (let i = startPage; i <= endPage; i++) {
+      result.push(
+          <PaginationItem>
+            <PaginationLink onClick={() => setCurrentPage(i)}>
+              {i}
+            </PaginationLink>
+          </PaginationItem>
+      );
+    }
+    return result;
+  }
+
+  React.useEffect(() => {
+    console.log(currentPage)
+    console.log("postId:::::::", props.match.params.postId)
+    if (currentPage) {
+      fetchCodingTestInfoByRoomId(props.match.params.postId, currentPage);
+    } else {
+      fetchCodingTestInfoByRoomId(currentPage);
+    }
+  }, [currentPage]);
+
+  // React.useEffect(() => {
+  //   setPostId(props.match.params.postId);
+  //   setCodingTestUrl("/coding/test/insert/"+postId);
+  //   fetchPostInfo();
+  // },[]);
 
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -139,7 +263,9 @@ export default function CodingRoomPost(props) {
       let tables = document.querySelectorAll(".table-responsive");
     }
     document.body.classList.toggle("coding/room/post");
-    fetchPostInfo(props.match.params.postId);
+    setPostId(props.match.params.postId);
+    setCodingTestUrl(`/coding/test/insert/${props.match.params.postId}`);
+    fetchCodingRoomPostInfo(props.match.params.postId);
 
     // Specify how to clean up after this effect:
     return function cleanup() {
@@ -149,6 +275,7 @@ export default function CodingRoomPost(props) {
       }
       document.body.classList.toggle("coding/room/post");
     };
+
   },[]);
   return (
       <>
@@ -161,7 +288,7 @@ export default function CodingRoomPost(props) {
                   <Card className="card-plain">
                     <CardHeader>
                       <h1 className="profile-title text-left">
-                        {checkSecretPost()}{title}</h1>
+                        {checkSecretPost()}{codingRoomInfo.title}</h1>
                     </CardHeader>
                     <CardBody>
                       <Form>
@@ -169,7 +296,7 @@ export default function CodingRoomPost(props) {
                           <Col md="6">
                             <FormGroup>
                               <label>intro</label><br/>
-                              {intro}
+                              {codingRoomInfo.intro}
                             </FormGroup>
                           </Col>
                         </Row>
@@ -177,7 +304,7 @@ export default function CodingRoomPost(props) {
                           <Col md="2">
                             <FormGroup>
                               <label>Join User</label><br/>
-                              {currentUser}/{maxUser}
+                              {codingRoomInfo.joinUsersCount}/{codingRoomInfo.maxUser}
                             </FormGroup>
                           </Col>
                         </Row>
@@ -211,17 +338,19 @@ export default function CodingRoomPost(props) {
                       <th className="text-center">#</th>
                       <th>Title</th>
                       <th>Pass</th>
+                      <th>Join</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {getContents()}
+                    {renderingCodingTests()}
                     </tbody>
                   </Table>
+                  {renderingPagination()}
                 </Col>
               </Row>
             </Container>
           </section>
-          <Footer />
+          <Footer/>
         </div>
       </>
   );
