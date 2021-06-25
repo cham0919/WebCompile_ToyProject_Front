@@ -45,21 +45,8 @@ const carouselItems = [
     },
 ];
 
-class CodingRoomInfo {
-    constructor(data) {
-        this.key = data.key;
-        this.title = data.title;
-        this.maxUser = data.maxUser;
-        this.joinUser = data.codingJoinUsers.length;
-        this.testCount = data.codingTests.length;
-    }
-}
-
-
-
 
 export default function CodingRoom(props) {
-    const [tabs, setTabs] = React.useState(1);
     const [startPage, setStartPage] = React.useState(1);
     const [endPage, setEndPage] = React.useState(1);
     const [codingRoomInfoList, setCodingRoomInfoList] = React.useState([]);
@@ -83,7 +70,12 @@ export default function CodingRoom(props) {
                 postInfo.push(
                     <tr>
                         <td className="text-center">{codingRoomInfo.key}</td>
-                        <td className="text-center"><a href={"/coding/room/post/" + codingRoomInfo.key}>{codingRoomInfo.title}</a></td>
+                        {/*<td className="text-center"><a href={`/coding/room/post/${codingRoomInfo.key}`}>{codingRoomInfo.title}</a></td>*/}
+                        <td className="text-center"><a onClick={() => {
+                            history.push({
+                                pathname: `/coding/room/post/${codingRoomInfo.key}`
+                            });
+                        }}>{codingRoomInfo.title}</a></td>
                         <td className="text-right">{codingRoomInfo.joinUsersCount} / {codingRoomInfo.maxUser}</td>
                         <td className="text-center">{codingRoomInfo.codingTestCount}</td>
                     </tr>
