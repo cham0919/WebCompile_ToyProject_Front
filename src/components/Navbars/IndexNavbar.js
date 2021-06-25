@@ -154,7 +154,6 @@ export default function IndexNavbar() {
  Axios.get("/wcp/user/check")
      .then(function (response) {
           // response
-          console.log(response)
      }).catch(function (error) {
          // 오류발생시 실행
      }).then(function() {

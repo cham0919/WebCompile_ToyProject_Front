@@ -91,7 +91,6 @@ export default function CodingRoomPost(props) {
 
   const fetchCodingRoomPostInfo = (postId) => {
     const url = `/wcp/coding/room/${postId}`;
-    console.log(url)
     Axios.get(url)
         .then(function (response) {
           //글 등록
@@ -120,7 +119,6 @@ export default function CodingRoomPost(props) {
 
   const fetchCodingTestInfoByRoomId = (roomId, page = 1) => {
     const url = `/wcp/coding/room/${roomId}/test`;
-    console.log(url)
     Axios.get(url, {
       params: {'pageNm': page}
     })
@@ -154,7 +152,6 @@ export default function CodingRoomPost(props) {
 
   const checkSecretPost = () => {
     const result = [];
-    console.log(codingRoomInfo)
     if(codingRoomInfo.secret){
       result.push(
           <i className="tim-icons icon-lock-circle"/>
@@ -241,8 +238,6 @@ export default function CodingRoomPost(props) {
   }
 
   React.useEffect(() => {
-    console.log(currentPage)
-    console.log("postId:::::::", props.match.params.postId)
     if (currentPage) {
       fetchCodingTestInfoByRoomId(props.match.params.postId, currentPage);
     } else {
@@ -250,11 +245,6 @@ export default function CodingRoomPost(props) {
     }
   }, [currentPage]);
 
-  // React.useEffect(() => {
-  //   setPostId(props.match.params.postId);
-  //   setCodingTestUrl("/coding/test/insert/"+postId);
-  //   fetchPostInfo();
-  // },[]);
 
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {

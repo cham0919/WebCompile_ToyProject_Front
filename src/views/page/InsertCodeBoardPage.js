@@ -97,9 +97,6 @@ export default function InsertCodeBoardPage() {
     Axios.post(url, data)
         .then(function (response) {
           alert("Success To Insert!");
-          console.log(response)
-          console.log("/coding/room/post/"+response.data.key.toString())
-          // history.push("/coding/room/post");
           history.push("/coding/room/post/"+response.data.key.toString());
         }).catch(function (error) {
       console.log(error)

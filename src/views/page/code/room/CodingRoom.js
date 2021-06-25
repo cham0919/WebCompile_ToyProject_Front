@@ -90,7 +90,6 @@ export default function CodingRoom(props) {
         Axios.get(url)
             .then(function (response) {
                 const dataList = response.data;
-                console.log(dataList)
                 setStartPage(dataList.startPage);
                 setEndPage(dataList.endPage);
                 setTotalEndPage(dataList.totalEndPage);
@@ -185,7 +184,6 @@ export default function CodingRoom(props) {
     }
 
     React.useEffect(() => {
-        console.log(currentPage)
         if (currentPage) {
             getPosts(currentPage);
         } else {
