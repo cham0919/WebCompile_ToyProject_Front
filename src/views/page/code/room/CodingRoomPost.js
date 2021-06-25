@@ -18,15 +18,29 @@
 import React from "react";
 // javascript plugin used to create scrollbars on windows
 // reactstrap components
-import {Button, Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Row, Table} from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Container,
+  Form,
+  FormGroup,
+  Pagination,
+  PaginationItem,
+  PaginationLink,
+  Row,
+  Table
+} from "reactstrap";
 // core components
 import ExamplesNavbar from "components/Navbars/ExamplesNavbar.js";
 import Footer from "components/Footer/Footer.js";
-import IndexNavbar from "components/Navbars/IndexNavbar.js";
 import Axios from "axios";
 import {useHistory, useLocation} from "react-router";
 import {Link} from "react-router-dom";
-import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
+
+
 
 const carouselItems = [
   {

@@ -20,7 +20,6 @@ import React from "react";
 // reactstrap components
 import {Button, Table,} from "reactstrap";
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
-
 // core components
 import {Link} from "react-router-dom";
 import Axios from "axios";
@@ -54,7 +53,6 @@ export default function CodingRoom(props) {
     const [totalEndPage, setTotalEndPage] = React.useState(1);
 
     const history = useHistory();
-
     const renderOnePagePost = () => {
         const postInfo = [];
         if (codingRoomInfoList.length == 0) {

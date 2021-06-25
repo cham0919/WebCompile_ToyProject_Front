@@ -318,8 +318,6 @@ function run() {
                 withCredentials: apiUrl.indexOf("/secure") != -1 ? true : false
             },
             success: function (data, textStatus, jqXHR) {
-                console.log(`Your submission token is: 됨????`);
-                console.log(data);
                 if (wait == true) {
                     handleResult(data);
                 } else {
@@ -344,7 +342,6 @@ function run() {
                 async: true,
                 contentType: "text/plain",
                 success: function (responseData, textStatus, jqXHR) {
-                    console.log(responseData)
                     sqliteAdditionalFiles = responseData;
                     data["additional_files"] = sqliteAdditionalFiles;
                     sendRequest(data);
@@ -632,7 +629,6 @@ $(document).ready(function () {
                     enabled: false
                 }
             });
-            console.log(document.getElementById("content").value)
             stdinEditor.setValue(document.getElementById("content").value)
         });
 
