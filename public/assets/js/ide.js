@@ -217,7 +217,7 @@ function handleResult(data, number, size) {
     }
 
     if(count == size){
-        let status = text.includes("실패") ? 1 : 0;
+        let status = text.includes("실패") ? 0 : 1;
         registerSubmit(status);
     }
     $runBtn.removeClass("loading");
@@ -380,7 +380,7 @@ function registerSubmit(status){
         contentType: "application/json",
         data: JSON.stringify(data),
         success: function (data) {
-            if(status == 0){
+            if(status == 1){
                 alert("테스트 성공");
             }else{
                 alert("테스트 실패");
