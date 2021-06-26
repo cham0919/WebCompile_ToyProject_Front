@@ -78,10 +78,11 @@ export default function WebCompiler(props) {
     languageInfo.set("83",["swift","Swift"]);
     languageInfo.set("74",["typescript","TypeScript"]);
 
-  const fetchTestInfo = (testId) => {
+  const fetchTestInfo = (roomId, testId) => {
       setTestId(testId);
 
-      const url = "/wcp/coding/test/"+testId;
+      // const url = "/wcp/coding/test/"+testId;
+      const url = `/wcp/coding/room/${roomId}/test/${testId}`;
       Axios.get(url)
           .then(function (response) {
               //글 등록
@@ -123,7 +124,7 @@ export default function WebCompiler(props) {
     }
     document.body.classList.toggle("wcp/ide");
     setpostId(props.match.params.postId)
-    fetchTestInfo(props.match.params.testId);
+    fetchTestInfo(props.match.params.postId, props.match.params.testId);
 
     // Specify how to clean up after this effect:
     return function cleanup() {

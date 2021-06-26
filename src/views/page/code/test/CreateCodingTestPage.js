@@ -105,7 +105,8 @@ export default function CreateCodingTestPage(props) {
   }
 
   const submitCodePost = () => {
-    const url = "/wcp/coding/test/" + postId;
+    // const url = "/wcp/coding/test/" + postId;
+    const url = `/wcp/coding/room/${postId}/test`;
     let title = document.getElementById("title").value;
     let content = document.getElementById("content").value;
     let languages = document.getElementsByName("language");

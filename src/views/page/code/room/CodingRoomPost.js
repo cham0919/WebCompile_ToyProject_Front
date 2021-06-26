@@ -223,7 +223,7 @@ export default function CodingRoomPost(props) {
           {renderingPaginationNumber()}
           <PaginationItem>
             <PaginationLink onClick={() => {
-              if (endPage == totalEndPage) {
+              if (endPage >= totalEndPage) {
                 alert("다음 페이지가 없습니다")
               } else {
                 setCurrentPage(endPage+1)
